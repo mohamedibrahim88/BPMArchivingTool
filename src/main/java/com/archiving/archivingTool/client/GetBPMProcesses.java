@@ -13,7 +13,7 @@ public class GetBPMProcesses {
 
     public void getProcesses(String bpmServerUrl, String username, String password) {
         try {
-            String apiUrl = bpmServerUrl + "/rest/bpm/wle/v1/exposed/process";
+            String apiUrl = bpmServerUrl + "/rest/bpm/wle/v1/processApps";
             URL url = new URL(apiUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
