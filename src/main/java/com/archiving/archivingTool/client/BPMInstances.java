@@ -75,6 +75,24 @@ private String bpmServerUrl;
     }
 
     public void getInstancesBySnapshotIDAndStatus (String snapshotID, String Status){}
-    public void getAllInstancesByProcessName(String processName){}
+
+    public void getAllInstancesByProcessName(String username,String password,String processName){
+        String bpmApiUrl = bpmServerUrl+"rest/bpm/wle/v1/processes/search?searchFilter="+processName+"";
+        ArrayList<Instances> instances = new ArrayList<>();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        // Set authentication if needed (Basic Auth example)
+        headers.setBasicAuth(username, password);
+        HttpEntity<Object> requestEntity = new HttpEntity<>(processName, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                bpmApiUrl,
+                HttpMethod.POST,
+                requestEntity,
+                String.class,
+                processName
+        );
+        System.out.println("response"+ response.getBody());
+    }
 
 }

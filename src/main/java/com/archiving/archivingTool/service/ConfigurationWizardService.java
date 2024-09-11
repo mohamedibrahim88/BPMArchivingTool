@@ -1,7 +1,6 @@
 package com.archiving.archivingTool.service;
 
 import com.archiving.archivingTool.client.ConfigurationWizard;
-import com.archiving.archivingTool.client.GetBPMProcesses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
