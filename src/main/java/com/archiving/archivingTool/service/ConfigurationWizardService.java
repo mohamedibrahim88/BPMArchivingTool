@@ -1,6 +1,5 @@
 package com.archiving.archivingTool.service;
 
-import com.archiving.archivingTool.client.GetBPMProcesses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,10 +8,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ConfigurationWizardService {
 
-    @Autowired
-    GetBPMProcesses getBPMProcesses;
+
 
     public void getGetBPMProcesses(String bpmServerUrl, String username, String password) {
-        getBPMProcesses.getProcesses(bpmServerUrl, username, password);
     }
 }
