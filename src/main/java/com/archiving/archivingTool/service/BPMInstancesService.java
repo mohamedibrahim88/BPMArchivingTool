@@ -19,8 +19,8 @@ public class BPMInstancesService {
         bpmInstances.getInstancesBySnapshotIDAndStatus(snapshotID,status);
 
     }
-    public void getAllInstancesByProcessName(String processName){
-        bpmInstances.getAllInstancesByProcessName(processName);
+    public void getAllInstancesByProcessName(String name, String password, String processName){
+        bpmInstances.getAllInstancesByProcessName(name,password,processName);
     }
 
 }

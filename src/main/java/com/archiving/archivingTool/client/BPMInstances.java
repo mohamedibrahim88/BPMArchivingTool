@@ -39,6 +39,7 @@ private String bpmServerUrl;
                 String.class,
                 processSnapshotDTO
         );
+        System.out.println("response"+ response.getBody());
 //        try {
 //            String apiUrl = bpmServerUrl + "/rest/bpm/wle/v1/";
 //            URL url = new URL(apiUrl);

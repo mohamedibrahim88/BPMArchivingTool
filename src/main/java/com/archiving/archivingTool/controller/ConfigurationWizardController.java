@@ -22,6 +22,6 @@ public class ConfigurationWizardController {
     @GetMapping()
     public void getProcesses(@RequestParam String bpmServerUrl, @RequestParam String username, @RequestParam String password){
         assert configurationWizardService != null;
-        configurationWizardService.getProcesses(bpmServerUrl, username, password);
+        configurationWizardService.getGetBPMProcesses(bpmServerUrl, username, password);
     }
 }
