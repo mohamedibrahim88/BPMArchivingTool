@@ -13,7 +13,8 @@ public class InstancesController {
     private BPMInstancesService bpmInstancesService;
 
     public InstancesController(BPMInstancesService bpmInstancesService) {
-        this.bpmInstancesService = null;
+
+        bpmInstancesService = null;
     }
     @PostMapping()
     public void getAllInstancesBySnapshotID(@RequestParam String username,@RequestParam String password,@RequestBody ProcessSnapshotDTO processSnapshotDTO) {

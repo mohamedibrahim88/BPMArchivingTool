@@ -1,8 +1,6 @@
 package com.archiving.archivingTool.client;
 
-import com.archiving.archivingTool.Configuration.RestConfig;
 import com.archiving.archivingTool.DTO.ProcessSnapshotDTO;
-import com.archiving.archivingTool.model.InstanceInformation;
 import com.archiving.archivingTool.model.Instances;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,21 +8,16 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Base64;
 
 @Component
 public class BPMInstances {
-@Value("${bpm.server.url}")
-private String bpmServerUrl;
-@Autowired
-  private RestTemplate restTemplate;
-    public ArrayList<Instances> getAllInstancesBySnapshotID(String username,String password,ProcessSnapshotDTO processSnapshotDTO) {
-        String bpmApiUrl = bpmServerUrl+"rest/bpm/wle/v1/processes/search?offset=0&limit=20";
+   // @Value("${bpm.server.url}")
+    private String bpmServerUrl = "https://localhost:9443/";
+    @Autowired
+    private RestTemplate restTemplate;
+    public ArrayList<Instances> getAllInstancesBySnapshotID(String username, String password, ProcessSnapshotDTO processSnapshotDTO) {
+        String bpmApiUrl = bpmServerUrl +"rest/bpm/wle/v1/processes/search?offset=0&limit=20";
         ArrayList<Instances> instances = new ArrayList<>();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -39,7 +32,7 @@ private String bpmServerUrl;
                 String.class,
                 processSnapshotDTO
         );
-        System.out.println("response"+ response.getBody());
+         System.out.println("response"+ response.getBody());
 //        try {
 //            String apiUrl = bpmServerUrl + "/rest/bpm/wle/v1/";
 //            URL url = new URL(apiUrl);
@@ -75,10 +68,11 @@ private String bpmServerUrl;
         return instances;
     }
 
-    public void getInstancesBySnapshotIDAndStatus (String snapshotID, String Status){}
+    public void getInstancesBySnapshotIDAndStatus(String snapshotID, String Status) {
+    }
 
-    public void getAllInstancesByProcessName(String username,String password,String processName){
-        String bpmApiUrl = bpmServerUrl+"rest/bpm/wle/v1/processes/search?searchFilter="+processName+"";
+    public void getAllInstancesByProcessName(String username, String password, String processName) {
+        String bpmApiUrl = bpmServerUrl + "rest/bpm/wle/v1/processes/search?searchFilter=" + processName + "";
         ArrayList<Instances> instances = new ArrayList<>();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -94,6 +88,7 @@ private String bpmServerUrl;
                 processName
         );
         System.out.println("response"+ response.getBody());
-    }
+   }
+
 
 }

@@ -3,9 +3,9 @@ package com.archiving.archivingTool.service;
 import com.archiving.archivingTool.DTO.ProcessSnapshotDTO;
 import com.archiving.archivingTool.client.BPMInstances;
 import lombok.RequiredArgsConstructor;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import org.springframework.stereotype.*;
 @Service
 @RequiredArgsConstructor
 public class BPMInstancesService {
