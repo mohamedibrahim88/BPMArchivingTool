@@ -19,10 +19,12 @@ import java.util.Base64;
 
 @Component
 public class BPMInstances {
-@Value("${bpm.server.url}")
-private String bpmServerUrl;
-@Autowired
-  private RestTemplate restTemplate;
+    @Value("${bpm.server.url}")
+    private String bpmServerUrl;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
     public ArrayList<Instances> getAllInstancesBySnapshotID(String username,String password,ProcessSnapshotDTO processSnapshotDTO) {
         String bpmApiUrl = bpmServerUrl+"rest/bpm/wle/v1/processes/search?offset=0&limit=20";
         ArrayList<Instances> instances = new ArrayList<>();

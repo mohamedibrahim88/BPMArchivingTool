@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service;
 public class BPMInstancesService {
 
     @Autowired
-    BPMInstances  bpmInstances;
+    BPMInstances bpmInstances;
+
     public void getAllInstancesBySnapshotID(String username,String password,ProcessSnapshotDTO processSnapshotDTO) {
          bpmInstances.getAllInstancesBySnapshotID(username,password,processSnapshotDTO);
     }

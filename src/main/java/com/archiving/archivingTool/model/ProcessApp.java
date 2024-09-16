@@ -13,6 +13,9 @@ public class ProcessApp {
     String lastModifiedOn;
     ArrayList<InstalledSnapshots> installedSnapshots;
 
+    public ProcessApp() {
+    }
+
     public ProcessApp(String shortName, String name, String description, String richDescription, String lastModifiedBy, String defaultVersion, String id,
                       String lastModifiedOn, ArrayList<InstalledSnapshots> installedSnapshots) {
         this.shortName = shortName;

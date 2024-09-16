@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 public class InstancesController {
 
     @Autowired
-    private BPMInstancesService bpmInstancesService;
+    private final BPMInstancesService bpmInstancesService;
 
     public InstancesController(BPMInstancesService bpmInstancesService) {
         this.bpmInstancesService = null;

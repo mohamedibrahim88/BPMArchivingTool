@@ -1,9 +1,12 @@
 package com.archiving.archivingTool.service;
 
 import com.archiving.archivingTool.client.ConfigurationWizard;
+import com.archiving.archivingTool.model.ProcessApp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
@@ -12,7 +15,7 @@ public class ConfigurationWizardService {
     @Autowired
     private ConfigurationWizard configurationWizard;
 
-    public void getGetBPMProcesses(String bpmServerUrl, String username, String password) {
-        configurationWizard.getProcesses(bpmServerUrl, username, password);
+    public ArrayList<ProcessApp> getGetBPMProcesses(String bpmServerUrl, String username, String password) {
+        return configurationWizard.getProcesses(bpmServerUrl, username, password);
     }
 }

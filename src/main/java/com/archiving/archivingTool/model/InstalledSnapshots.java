@@ -11,6 +11,10 @@ public class InstalledSnapshots {
     String branchID;
     String branchName;
     String ID;
+
+    public InstalledSnapshots() {
+    }
+
     public InstalledSnapshots(String name, String acronym,
                               String active, String createdOn, boolean snapshotTip,
                               String branchID, String branchName, String ID) {
