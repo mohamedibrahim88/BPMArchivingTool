@@ -12,11 +12,10 @@ import org.springframework.web.bind.annotation.*;
 public class InstancesController {
 
     @Autowired
-    private BPMInstancesService bpmInstancesService;
+    private final BPMInstancesService bpmInstancesService;
 
     public InstancesController(BPMInstancesService bpmInstancesService) {
-
-        bpmInstancesService = null;
+        this.bpmInstancesService = null;
     }
     @PostMapping()
     public void getAllInstancesBySnapshotID(@RequestParam String username,@RequestParam String password,@RequestBody ProcessSnapshotDTO processSnapshotDTO) {
