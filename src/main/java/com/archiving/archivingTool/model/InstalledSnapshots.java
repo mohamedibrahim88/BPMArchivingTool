@@ -5,15 +5,17 @@ public class InstalledSnapshots {
     String name;
     String acronym;
     String active;
-    String activeSince;
+    //String activeSince;
     String createdOn;
     boolean snapshotTip;
     String branchID;
     String branchName;
     String ID;
-    public InstalledSnapshots(String name, String acronym,
-                              String active, String createdOn, boolean snapshotTip,
-                              String branchID, String branchName, String ID) {
+
+    public InstalledSnapshots() {
+    }
+
+    public InstalledSnapshots(String name, String acronym, String active, String createdOn, boolean snapshotTip, String branchID, String branchName, String ID) {
         this.name = name;
         this.acronym = acronym;
         this.active = active;
@@ -86,19 +88,5 @@ public class InstalledSnapshots {
 
     public void setID(String ID) {
         this.ID = ID;
-    }
-
-    @Override
-    public String toString() {
-        return "InstalledSnapshots{" +
-                "name='" + name + '\'' +
-                ", acronym='" + acronym + '\'' +
-                ", active='" + active + '\'' +
-                ", createdOn='" + createdOn + '\'' +
-                ", snapshotTip=" + snapshotTip +
-                ", branchID='" + branchID + '\'' +
-                ", branchName='" + branchName + '\'' +
-                ", ID='" + ID + '\'' +
-                '}';
     }
 }

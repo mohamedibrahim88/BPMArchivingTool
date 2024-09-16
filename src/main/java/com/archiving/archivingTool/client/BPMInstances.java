@@ -1,9 +1,9 @@
 package com.archiving.archivingTool.client;
 
 import com.archiving.archivingTool.DTO.ProcessSnapshotDTO;
+import com.archiving.archivingTool.DTO.Result;
 import com.archiving.archivingTool.model.Instances;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 @Component
 public class BPMInstances {
    // @Value("${bpm.server.url}")
-    private String bpmServerUrl = "https://localhost:9443/";
+    private String bpmServerUrl = "https://bpmsrv:9443/";
     @Autowired
     private RestTemplate restTemplate;
     public ArrayList<Instances> getAllInstancesBySnapshotID(String username, String password, ProcessSnapshotDTO processSnapshotDTO) {
@@ -71,23 +71,26 @@ public class BPMInstances {
     public void getInstancesBySnapshotIDAndStatus(String snapshotID, String Status) {
     }
 
-    public void getAllInstancesByProcessName(String username, String password, String processName) {
+    public Result<Instances> getAllInstancesByProcessName(String username, String password, String processName) {
         String bpmApiUrl = bpmServerUrl + "rest/bpm/wle/v1/processes/search?searchFilter=" + processName + "";
-        ArrayList<Instances> instances = new ArrayList<>();
+        Result result= new Result();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         // Set authentication if needed (Basic Auth example)
         headers.setBasicAuth(username, password);
         HttpEntity<Object> requestEntity = new HttpEntity<>(processName, headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(
-                bpmApiUrl,
-                HttpMethod.POST,
-                requestEntity,
-                String.class,
-                processName
-        );
-        System.out.println("response"+ response.getBody());
+       ResponseEntity<Result> response = restTemplate.exchange(
+               bpmApiUrl,
+               HttpMethod.GET,
+               requestEntity,
+                Result.class,
+             //  new ParameterizedTypeReference<Result>() {},
+               processName
+       );
+        result = response.getBody();
+        System.out.println();
+        return result;
    }
 
 

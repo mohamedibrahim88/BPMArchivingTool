@@ -1,38 +1,30 @@
 package com.archiving.archivingTool.model;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Instances {
-    InstancesOverview instancesOverview ;
+    Overview overview ;
 
-    ArrayList<InstanceInformation> instanceInformation;
+    List<Processes> processes;
 
-    public Instances(InstancesOverview instancesOverview, ArrayList<InstanceInformation> instanceInformation) {
-        this.instancesOverview = instancesOverview;
-        this.instanceInformation = instanceInformation;
+    public Instances(Overview overview, List<Processes> processes) {
+        this.overview = overview;
+        this.processes = processes;
     }
 
-    public InstancesOverview getInstancesOverview() {
-        return instancesOverview;
+    public Overview getOverview() {
+        return overview;
     }
 
-    public void setInstancesOverview(InstancesOverview instancesOverview) {
-        this.instancesOverview = instancesOverview;
+    public void setOverview(Overview overview) {
+        this.overview = overview;
     }
 
-    public ArrayList<InstanceInformation> getInstanceInformation() {
-        return instanceInformation;
+    public List<Processes> getProcesses() {
+        return processes;
     }
 
-    public void setInstanceInformation(ArrayList<InstanceInformation> instanceInformation) {
-        this.instanceInformation = instanceInformation;
-    }
-
-    @Override
-    public String toString() {
-        return "Instances{" +
-                "instancesOverview=" + instancesOverview +
-                ", instanceInformation=" + instanceInformation +
-                '}';
+    public void setProcesses(List<Processes> processes) {
+        this.processes = processes;
     }
 }

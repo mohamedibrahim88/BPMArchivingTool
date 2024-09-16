@@ -1,32 +1,31 @@
 package com.archiving.archivingTool.model;
 
-public class InstanceInformation {
+public class Processes {
 
-    String instanceID;
+    String piid;
     String name;
     String bpdName;
+    String snapshotID;
     String dueDate;
     String executionState;
-    String creationDate;
     String lastModificationTime;
 
-    public InstanceInformation(String instanceID, String name, String bpdName, String dueDate,
-                               String executionState, String creationDate, String lastModificationTime) {
-        this.instanceID = instanceID;
+    public Processes(String piid, String name, String bpdName, String snapshotID, String dueDate, String executionState, String lastModificationTime) {
+        this.piid = piid;
         this.name = name;
         this.bpdName = bpdName;
+        this.snapshotID = snapshotID;
         this.dueDate = dueDate;
         this.executionState = executionState;
-        this.creationDate = creationDate;
         this.lastModificationTime = lastModificationTime;
     }
 
-    public String getInstanceID() {
-        return instanceID;
+    public String getPiid() {
+        return piid;
     }
 
-    public void setInstanceID(String instanceID) {
-        this.instanceID = instanceID;
+    public void setPiid(String piid) {
+        this.piid = piid;
     }
 
     public String getName() {
@@ -45,6 +44,14 @@ public class InstanceInformation {
         this.bpdName = bpdName;
     }
 
+    public String getSnapshotID() {
+        return snapshotID;
+    }
+
+    public void setSnapshotID(String snapshotID) {
+        this.snapshotID = snapshotID;
+    }
+
     public String getDueDate() {
         return dueDate;
     }
@@ -61,32 +68,11 @@ public class InstanceInformation {
         this.executionState = executionState;
     }
 
-    public String getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(String creationDate) {
-        this.creationDate = creationDate;
-    }
-
     public String getLastModificationTime() {
         return lastModificationTime;
     }
 
     public void setLastModificationTime(String lastModificationTime) {
         this.lastModificationTime = lastModificationTime;
-    }
-
-    @Override
-    public String toString() {
-        return "InstanceInformation{" +
-                "instanceID='" + instanceID + '\'' +
-                ", name='" + name + '\'' +
-                ", bpdName='" + bpdName + '\'' +
-                ", dueDate='" + dueDate + '\'' +
-                ", executionState='" + executionState + '\'' +
-                ", creationDate='" + creationDate + '\'' +
-                ", lastModificationTime='" + lastModificationTime + '\'' +
-                '}';
     }
 }

@@ -1,5 +1,7 @@
 package com.archiving.archivingTool.controller;
 
+import com.archiving.archivingTool.DTO.Result;
+import com.archiving.archivingTool.model.ProcessAppsList;
 import com.archiving.archivingTool.service.ConfigurationWizardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,8 +22,8 @@ public class ConfigurationWizardController {
     }
 
     @GetMapping()
-    public void getProcesses(@RequestParam String bpmServerUrl, @RequestParam String username, @RequestParam String password){
+    public Result<ProcessAppsList> getProcesses( @RequestParam String username, @RequestParam String password){
         assert configurationWizardService != null;
-        configurationWizardService.getGetBPMProcesses(bpmServerUrl, username, password);
+       return configurationWizardService.getGetBPMProcesses(username, password);
     }
 }

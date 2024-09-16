@@ -2,26 +2,28 @@ package com.archiving.archivingTool.model;
 
 import java.util.ArrayList;
 
-public class ProcessApp {
+public class ProcessAppsList {
     String shortName;
     String name;
     String description;
     String richDescription;
     String lastModifiedBy;
     String defaultVersion;
-    String id;
+    String ID;
     String lastModifiedOn;
     ArrayList<InstalledSnapshots> installedSnapshots;
 
-    public ProcessApp(String shortName, String name, String description, String richDescription, String lastModifiedBy, String defaultVersion, String id,
-                      String lastModifiedOn, ArrayList<InstalledSnapshots> installedSnapshots) {
+    public ProcessAppsList() {
+    }
+
+    public ProcessAppsList(String shortName, String name, String description, String richDescription, String lastModifiedBy, String defaultVersion, String ID, String lastModifiedOn, ArrayList<InstalledSnapshots> installedSnapshots) {
         this.shortName = shortName;
         this.name = name;
         this.description = description;
         this.richDescription = richDescription;
         this.lastModifiedBy = lastModifiedBy;
         this.defaultVersion = defaultVersion;
-        this.id = id;
+        this.ID = ID;
         this.lastModifiedOn = lastModifiedOn;
         this.installedSnapshots = installedSnapshots;
     }
@@ -74,12 +76,12 @@ public class ProcessApp {
         this.defaultVersion = defaultVersion;
     }
 
-    public String getId() {
-        return id;
+    public String getID() {
+        return ID;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setID(String ID) {
+        this.ID = ID;
     }
 
     public String getLastModifiedOn() {
@@ -97,5 +99,4 @@ public class ProcessApp {
     public void setInstalledSnapshots(ArrayList<InstalledSnapshots> installedSnapshots) {
         this.installedSnapshots = installedSnapshots;
     }
-
 }

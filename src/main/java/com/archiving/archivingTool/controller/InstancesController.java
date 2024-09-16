@@ -1,8 +1,10 @@
 package com.archiving.archivingTool.controller;
 
 import com.archiving.archivingTool.DTO.ProcessSnapshotDTO;
+import com.archiving.archivingTool.DTO.Result;
 import com.archiving.archivingTool.service.BPMInstancesService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,9 +24,9 @@ public class InstancesController {
     }
 
     @GetMapping()
-    public void getAllInstancesByProcessName(@RequestParam String name, @RequestParam String password, @RequestParam String processName){
+    public Result getAllInstancesByProcessName(@RequestParam String name, @RequestParam String password, @RequestParam String processName){
 
-        bpmInstancesService.getAllInstancesByProcessName(name,password,processName);
+       return bpmInstancesService.getAllInstancesByProcessName(name,password,processName);
     }
 
 
