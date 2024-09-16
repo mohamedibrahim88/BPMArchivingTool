@@ -19,8 +19,9 @@ import java.util.Base64;
 
 @Component
 public class BPMInstances {
-    @Value("${bpm.server.url}")
-    private String bpmServerUrl;
+//    @Value("${bpm.server.url}")
+//    private String bpmServerUrl;
+    private String bpmServerUrl = "https://localhost:9443/";
 
     @Autowired
     private RestTemplate restTemplate;
