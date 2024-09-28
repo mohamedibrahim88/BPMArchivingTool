@@ -1,6 +1,5 @@
 package com.archiving.archivingTool.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.util.List;
@@ -9,9 +8,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Instances {
-    Overview overview ;
+public class ProcessAppsData {
 
-    List<Processes> processes;
+    private List<ProcessAppsList> processAppsList;
+
 
 }

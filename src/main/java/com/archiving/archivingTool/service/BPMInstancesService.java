@@ -3,6 +3,7 @@ package com.archiving.archivingTool.service;
 import com.archiving.archivingTool.DTO.ProcessSnapshotDTO;
 import com.archiving.archivingTool.DTO.Result;
 import com.archiving.archivingTool.client.BPMInstances;
+import com.archiving.archivingTool.model.Instances;
 import lombok.RequiredArgsConstructor;
 //import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class BPMInstancesService {
         bpmInstances.getInstancesBySnapshotIDAndStatus(snapshotID,status);
 
     }
-    public Result getAllInstancesByProcessName(String name, String password, String processName){
+    public Instances getAllInstancesByProcessName(String name, String password, String processName){
        return bpmInstances.getAllInstancesByProcessName(name,password,processName);
     }
 

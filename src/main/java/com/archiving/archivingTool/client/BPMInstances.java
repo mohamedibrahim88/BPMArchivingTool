@@ -4,6 +4,7 @@ import com.archiving.archivingTool.DTO.ProcessSnapshotDTO;
 import com.archiving.archivingTool.DTO.Result;
 import com.archiving.archivingTool.model.Instances;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -71,26 +72,28 @@ public class BPMInstances {
     public void getInstancesBySnapshotIDAndStatus(String snapshotID, String Status) {
     }
 
-    public Result<Instances> getAllInstancesByProcessName(String username, String password, String processName) {
+    public Instances getAllInstancesByProcessName(String username, String password, String processName) {
         String bpmApiUrl = bpmServerUrl + "rest/bpm/wle/v1/processes/search?searchFilter=" + processName + "";
-        Result result= new Result();
+        Result<Instances> result= new Result<>();
+        Instances instances = new Instances();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         // Set authentication if needed (Basic Auth example)
         headers.setBasicAuth(username, password);
         HttpEntity<Object> requestEntity = new HttpEntity<>(processName, headers);
 
-       ResponseEntity<Result> response = restTemplate.exchange(
+       ResponseEntity<Result<Instances>> response = restTemplate.exchange(
                bpmApiUrl,
                HttpMethod.GET,
                requestEntity,
-                Result.class,
-             //  new ParameterizedTypeReference<Result>() {},
+//                Result.class,
+               new ParameterizedTypeReference<Result<Instances>>() {},
                processName
        );
         result = response.getBody();
+        instances = result.getData();
         System.out.println();
-        return result;
+        return instances;
    }
 
 
