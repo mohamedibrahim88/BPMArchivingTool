@@ -32,8 +32,8 @@ public class ConfigurationWizardController {
     }
 
     @GetMapping("/snapshots")
-    public List<InstalledSnapshots> getInstalledSnapshots(@RequestParam String username, @RequestParam String password){
+    public List<InstalledSnapshots> getInstalledSnapshots(@RequestParam String username, @RequestParam String password, @RequestParam String processID){
         assert configurationWizardService != null;
-        return configurationWizardService.getInstalledSnapshots(username, password);
+        return configurationWizardService.getInstalledSnapshots(username, password, processID);
     }
 }

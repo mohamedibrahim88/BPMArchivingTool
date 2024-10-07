@@ -24,9 +24,9 @@ public class InstancesController {
     }
 
     @GetMapping()
-    public Instances getAllInstancesByProcessName(@RequestParam String name, @RequestParam String password, @RequestParam String processName){
+    public Instances getAllInstancesByProcessName(@RequestParam String name, @RequestParam String password, @RequestParam String processName, @RequestParam (required = false) String status, @RequestParam (required = false) String modifiedAfter, @RequestParam (required = false) String modifiedBefore){
 
-       return bpmInstancesService.getAllInstancesByProcessName(name,password,processName);
+       return bpmInstancesService.getAllInstancesByProcessName(name,password,processName, status, modifiedAfter, modifiedBefore);
     }
 
 

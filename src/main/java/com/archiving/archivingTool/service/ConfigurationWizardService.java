@@ -24,7 +24,7 @@ public class ConfigurationWizardService {
        return configurationWizard.getProcesses(username, password);
     }
 
-    public List<InstalledSnapshots> getInstalledSnapshots(String username, String password) {
-        return configurationWizard.getInstalledSnapshots(username, password);
+    public List<InstalledSnapshots> getInstalledSnapshots(String username, String password, String processID) {
+        return configurationWizard.getInstalledSnapshots(username, password, processID);
     }
 }

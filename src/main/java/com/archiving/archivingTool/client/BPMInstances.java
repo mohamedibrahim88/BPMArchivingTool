@@ -72,8 +72,19 @@ public class BPMInstances {
     public void getInstancesBySnapshotIDAndStatus(String snapshotID, String Status) {
     }
 
-    public Instances getAllInstancesByProcessName(String username, String password, String processName) {
-        String bpmApiUrl = bpmServerUrl + "rest/bpm/wle/v1/processes/search?searchFilter=" + processName + "";
+
+    public Instances getAllInstancesByProcessName(String username, String password, String processName, String status, String modifiedAfter, String modifiedBefore) {
+        String filter = "";
+        if (status != null){
+           filter = filter + "&statusFilter=" + status;
+        }
+        if (modifiedAfter != null){
+            filter = filter + "&modifiedAfter=" + modifiedAfter;
+        }
+        if (modifiedBefore != null){
+            filter = filter + "&modifiedBefore=" + modifiedBefore;
+        }
+        String bpmApiUrl = bpmServerUrl + "rest/bpm/wle/v1/processes/search?searchFilter=" + processName + filter +"";
         Result<Instances> result= new Result<>();
         Instances instances = new Instances();
         HttpHeaders headers = new HttpHeaders();
@@ -82,19 +93,18 @@ public class BPMInstances {
         headers.setBasicAuth(username, password);
         HttpEntity<Object> requestEntity = new HttpEntity<>(processName, headers);
 
-       ResponseEntity<Result<Instances>> response = restTemplate.exchange(
-               bpmApiUrl,
-               HttpMethod.GET,
-               requestEntity,
+        ResponseEntity<Result<Instances>> response = restTemplate.exchange(
+                bpmApiUrl,
+                HttpMethod.GET,
+                requestEntity,
 //                Result.class,
-               new ParameterizedTypeReference<Result<Instances>>() {},
-               processName
-       );
+                new ParameterizedTypeReference<Result<Instances>>() {},
+                processName
+        );
         result = response.getBody();
         instances = result.getData();
         System.out.println();
         return instances;
-   }
-
+    }
 
 }

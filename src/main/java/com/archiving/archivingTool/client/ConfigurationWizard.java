@@ -58,7 +58,7 @@ public class ConfigurationWizard {
         return processAppsLists;
     }
 
-    public List<InstalledSnapshots> getInstalledSnapshots(String username, String password) {
+    public List<InstalledSnapshots> getInstalledSnapshots(String username, String password, String processID) {
         String bpmApiUrl = bpmServerUrl +"/rest/bpm/wle/v1/processApps";
 //        List<InstalledSnapshots> installedSnapshots= new ArrayList<>();
         List<InstalledSnapshots> installedSnapshots;
@@ -89,8 +89,15 @@ public class ConfigurationWizard {
 
         System.out.println(response.getBody());
         result = response.getBody();
-
-        installedSnapshots= result.getData().getProcessAppsList().get(3).getInstalledSnapshots();
+        int snapshotIndex = 0;
+        for (ProcessAppsList processAppsList : result.getData().getProcessAppsList()){
+            System.out.println(processAppsList.getID() + " = " + processID);
+            if (processAppsList.getID().equals(processID)){
+                break;
+            }
+            snapshotIndex ++;
+        }
+        installedSnapshots= result.getData().getProcessAppsList().get(snapshotIndex).getInstalledSnapshots();
 //        processAppsLists = null;
         System.out.println("Result " +result.getData());
 
