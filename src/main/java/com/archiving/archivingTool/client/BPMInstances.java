@@ -2,7 +2,9 @@ package com.archiving.archivingTool.client;
 
 import com.archiving.archivingTool.DTO.ProcessSnapshotDTO;
 import com.archiving.archivingTool.DTO.Result;
+import com.archiving.archivingTool.DTO.TerminateDTO;
 import com.archiving.archivingTool.model.Instances;
+import com.archiving.archivingTool.model.TerminatedInstanceDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class BPMInstances {
@@ -105,6 +108,40 @@ public class BPMInstances {
         instances = result.getData();
         System.out.println();
         return instances;
+    }
+
+
+    public TerminatedInstanceDetails terminateInstances(TerminateDTO instancesIDs) {
+
+        String instancesIDsStr = instancesIDs.getInstancesIDs().toString();
+//        instancesIDsStr = instancesIDsStr.replace(",", "%2C");
+        instancesIDsStr = instancesIDsStr.replace("[", "");
+        instancesIDsStr = instancesIDsStr.replace("]", "");
+        instancesIDsStr = instancesIDsStr.replace(" ", "");
+
+        TerminatedInstanceDetails terminatedInstanceDetails = new TerminatedInstanceDetails();
+
+        String bpmApiUrl = bpmServerUrl + "rest/bpm/wle/v1/process/bulk?instanceIds=" + instancesIDsStr + "&action=terminate&parts=header";
+        Result<TerminatedInstanceDetails> result= new Result<>();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        // Set authentication if needed (Basic Auth example)
+        headers.setBasicAuth("wasadmin", "wasadminP@ssw0rd");
+
+        HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<Result<TerminatedInstanceDetails>> response = restTemplate.exchange(
+                bpmApiUrl,
+                HttpMethod.POST,
+                requestEntity,
+//                Result.class
+                new ParameterizedTypeReference<Result<TerminatedInstanceDetails>>() {}
+//                processName
+        );
+        result = response.getBody();
+        terminatedInstanceDetails = result.getData();
+        System.out.println();
+        return terminatedInstanceDetails;
     }
 
 }
