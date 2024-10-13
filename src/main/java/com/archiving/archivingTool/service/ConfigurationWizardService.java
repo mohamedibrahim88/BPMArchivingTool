@@ -1,16 +1,11 @@
 package com.archiving.archivingTool.service;
 
-import com.archiving.archivingTool.DTO.Result;
 import com.archiving.archivingTool.client.ConfigurationWizard;
-import com.archiving.archivingTool.model.InstalledSnapshots;
-import com.archiving.archivingTool.model.ProcessAppsData;
-import com.archiving.archivingTool.model.ProcessAppsList;
-import com.archiving.archivingTool.model.Processes;
+import com.archiving.archivingTool.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.management.InstanceAlreadyExistsException;
 import java.util.List;
 
 @Service
@@ -26,5 +21,9 @@ public class ConfigurationWizardService {
 
     public List<InstalledSnapshots> getInstalledSnapshots(String username, String password, String processID) {
         return configurationWizard.getInstalledSnapshots(username, password, processID);
+    }
+
+    public ExposedProcesses getExposedProcesses(String processAppID) {
+        return configurationWizard.getExposedProcesses(processAppID);
     }
 }

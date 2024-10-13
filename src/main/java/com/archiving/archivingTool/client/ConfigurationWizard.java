@@ -1,10 +1,7 @@
 package com.archiving.archivingTool.client;
 
 import com.archiving.archivingTool.DTO.Result;
-import com.archiving.archivingTool.model.InstalledSnapshots;
-import com.archiving.archivingTool.model.ProcessAppsData;
-import com.archiving.archivingTool.model.ProcessAppsList;
-import com.archiving.archivingTool.model.Processes;
+import com.archiving.archivingTool.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -105,4 +102,35 @@ public class ConfigurationWizard {
         return installedSnapshots;
     }
 
+    public ExposedProcesses getExposedProcesses(String processAppID) {
+
+        String bpmApiUrl = bpmServerUrl + "/rest/bpm/wle/v1/exposed/process";
+        Result<ExposedProcesses> result= new Result<>();
+        ExposedProcesses exposedProcesses = new ExposedProcesses();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        // Set authentication if needed (Basic Auth example)
+        headers.setBasicAuth("wasadmin", "wasadminP@ssw0rd");
+        HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
+        ResponseEntity<Result<ExposedProcesses>> response = restTemplate.exchange(
+                bpmApiUrl,
+                HttpMethod.GET,
+                requestEntity,
+//                Result.class
+                new ParameterizedTypeReference<Result<ExposedProcesses>>() {}
+//                processName
+        );
+        result = response.getBody();
+        exposedProcesses = result.getData();
+        List<ExposedItemsDetails> exposedItemsDetails = exposedProcesses.getExposedItemsList();
+        exposedProcesses = new ExposedProcesses();
+        List<ExposedItemsDetails> exposedItemsDetailsList = new ArrayList<>();
+        for (ExposedItemsDetails exposedItemsDetails1 : exposedItemsDetails){
+            if (exposedItemsDetails1.getProcessAppID().equals(processAppID)){
+                exposedItemsDetailsList.add(exposedItemsDetails1);
+            }
+        }
+        exposedProcesses.setExposedItemsList(exposedItemsDetailsList);
+        return exposedProcesses;
+    }
 }
