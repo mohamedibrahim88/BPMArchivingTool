@@ -10,5 +10,5 @@ import java.util.List;
 @ToString
 public class Result<T> {
     String status ;
-   T data;
+    T data;
 }
