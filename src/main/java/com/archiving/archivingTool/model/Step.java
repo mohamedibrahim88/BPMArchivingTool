@@ -3,6 +3,8 @@ package com.archiving.archivingTool.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -12,8 +14,8 @@ public class Step {
     String name;
     String type;
     String activityType;
+    @JsonProperty("externalID")
     String externalID;
-    String diagram;
     String lane;
     @JsonProperty("taskID")
     String taskID;

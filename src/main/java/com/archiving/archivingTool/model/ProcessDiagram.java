@@ -1,6 +1,5 @@
 package com.archiving.archivingTool.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.util.List;
@@ -9,9 +8,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Diagram {
-    @JsonProperty("Diagram")
+public class ProcessDiagram {
 
-    ProcessDiagram diagram;
-
+    String processAppID;
+    List<Step> step;
 }

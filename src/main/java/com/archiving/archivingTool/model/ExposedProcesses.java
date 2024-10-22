@@ -10,6 +10,5 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class ExposedProcesses {
-
     List<ExposedItemsDetails> exposedItemsList;
 }

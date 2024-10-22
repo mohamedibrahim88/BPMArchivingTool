@@ -3,15 +3,14 @@ package com.archiving.archivingTool.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Diagram {
-    @JsonProperty("Diagram")
+public class LoginTokenDetails {
 
-    ProcessDiagram diagram;
-
+    String expiration;
+    @JsonProperty("csrf_token")
+    String csrfToken;
 }

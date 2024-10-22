@@ -1,10 +1,11 @@
 package com.archiving.archivingTool.client;
 
-import com.archiving.archivingTool.DTO.ProcessSnapshotDTO;
-import com.archiving.archivingTool.DTO.Result;
-import com.archiving.archivingTool.DTO.TerminateDTO;
+import com.archiving.archivingTool.DTO.*;
+import com.archiving.archivingTool.model.DeleteSnapshotDetails;
 import com.archiving.archivingTool.model.Instances;
 import com.archiving.archivingTool.model.TerminatedInstanceDetails;
+import com.archiving.archivingTool.service.LoginTokenService;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -12,11 +13,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class BPMInstances {
    // @Value("${bpm.server.url}")
+    @Autowired
+    LoginTokenService loginTokenService;
     private String bpmServerUrl = "https://bpmsrv:9443/";
     @Autowired
     private RestTemplate restTemplate;
@@ -111,7 +113,7 @@ public class BPMInstances {
     }
 
 
-    public TerminatedInstanceDetails terminateInstances(TerminateDTO instancesIDs) {
+    public TerminatedInstanceDetails terminateInstances(InstancesListDTO instancesIDs) {
 
         String instancesIDsStr = instancesIDs.getInstancesIDs().toString();
 //        instancesIDsStr = instancesIDsStr.replace(",", "%2C");
@@ -144,4 +146,64 @@ public class BPMInstances {
         return terminatedInstanceDetails;
     }
 
+    public DeleteSnapshotDetails deleteSnapshot(DeleteSnapshotDTO deleteSnapshotDTO) {
+
+        String processAcronym = deleteSnapshotDTO.getProcessAcronym();
+        String snapshotAcronym = deleteSnapshotDTO.getSnapshotAcronym().toString();
+        snapshotAcronym = snapshotAcronym.replace("[", "");
+        snapshotAcronym = snapshotAcronym.replace("]", "");
+        snapshotAcronym = snapshotAcronym.replace(" ", "");
+
+        LoginTokenDTO loginTokenDTO = new LoginTokenDTO();
+        loginTokenDTO.setRefreshGroups("false");
+        loginTokenDTO.setRequestedLifetime("7200");
+        String csrfToken = loginTokenService.createLoginToken(loginTokenDTO);
+//        String csrfToken = "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MjkxMTM1MzQsInN1YiI6Indhc2FkbWluIn0.kHM7n_gVtfBVXNiA5YXBisNzzQc2eKRc9lkTjiCoVKk";
+
+        TerminatedInstanceDetails terminatedInstanceDetails = new TerminatedInstanceDetails();
+
+        String bpmApiUrl = bpmServerUrl + "ops/std/bpm/containers/" + processAcronym + "/versions?versions=" + snapshotAcronym + "";
+        DeleteSnapshotDetails deleteSnapshotDetails= new DeleteSnapshotDetails();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBasicAuth("wasadmin", "wasadminP@ssw0rd");
+        headers.set("BPMCSRFToken", csrfToken);
+        HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<DeleteSnapshotDetails> response = restTemplate.exchange(
+                bpmApiUrl,
+                HttpMethod.DELETE,
+                requestEntity,
+//                DeleteSnapshotDetails.class
+                new ParameterizedTypeReference<DeleteSnapshotDetails>() {}
+        );
+        deleteSnapshotDetails = response.getBody();
+        return deleteSnapshotDetails;
+    }
+
+    public ResponseEntity<Result> getInstancesObject (InstancesListDTO instancesIDs)
+    {
+        String instancesIDsStr = instancesIDs.getInstancesIDs().toString();
+//        instancesIDsStr = instancesIDsStr.replace(",", "%2C");
+            instancesIDsStr = instancesIDsStr.replace("[", "");
+            instancesIDsStr = instancesIDsStr.replace("]", "");
+            instancesIDsStr = instancesIDsStr.replace(" ", "");
+        String bpmApiUrl = bpmServerUrl + "/rest/bpm/wle/v1/process?action=getdetails&instanceIds="+instancesIDsStr+"&parts=data";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        // Set authentication if needed (Basic Auth example)
+        headers.setBasicAuth("wasadmin", "wasadminP@ssw0rd");
+
+        HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
+        System.out.println("api "+ bpmApiUrl);
+        ResponseEntity<Result> response = restTemplate.exchange(
+                bpmApiUrl,
+                HttpMethod.GET,
+                requestEntity,
+               Result.class
+//                processName
+        );
+        System.out.println(response);
+        return response;
+    }
 }

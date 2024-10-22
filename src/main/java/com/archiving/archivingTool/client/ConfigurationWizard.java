@@ -121,6 +121,7 @@ public class ConfigurationWizard {
 //                processName
         );
         result = response.getBody();
+        System.out.println("result"+ response.getBody());
         exposedProcesses = result.getData();
         List<ExposedItemsDetails> exposedItemsDetails = exposedProcesses.getExposedItemsList();
         exposedProcesses = new ExposedProcesses();
