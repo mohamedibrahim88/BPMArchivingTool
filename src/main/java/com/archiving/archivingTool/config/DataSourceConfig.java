@@ -14,15 +14,23 @@ import javax.sql.DataSource;
 public class DataSourceConfig {
 
     @Bean
-    @ConfigurationProperties(prefix="spring.bpm")
+//    @ConfigurationProperties(prefix="spring.bpm")
     public DataSource bpmDataSource() {
-        return DataSourceBuilder.create().build();
+        return DataSourceBuilder.create()
+                .url("jdbc:oracle:thin:@//oradb:1521/XE")
+                .username("process_db")
+                .password("dbadmin")
+                .driverClassName("oracle.jdbc.OracleDriver").build();
     }
 
     @Bean
-    @ConfigurationProperties(prefix="spring.archiving")
+//    @ConfigurationProperties(prefix="spring.archiving")
     public DataSource archivingDataSource() {
-        return DataSourceBuilder.create().build();
+        return DataSourceBuilder.create()
+                .url("jdbc:oracle:thin:@//oradb:1521/XE")
+                .username("Archiving_Solution")
+                .password("dbadmin")
+                .driverClassName("oracle.jdbc.OracleDriver").build();
     }
 
     @Bean
