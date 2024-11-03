@@ -1,11 +1,12 @@
 package com.archiving.archivingTool.entity.archiving;
 
-public class ProcessApps {
+public class Snapshots {
 
     String appID;
-    String bpdID;
+    String snapshotID;
     String branchID;
     String acronym;
-    String name;
-    String relationStartDate;
+    String isActive;
+    String activeSince;
+    String createdOn;
 }
