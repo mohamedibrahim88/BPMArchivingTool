@@ -1,7 +1,5 @@
 package com.archiving.archivingTool.controller;
 
-import com.archiving.archivingTool.DTO.Result;
-import com.archiving.archivingTool.model.Diagram;
 import com.archiving.archivingTool.model.ExposedItemsDetails;
 import com.archiving.archivingTool.model.Step;
 import com.archiving.archivingTool.service.TasksService;
@@ -11,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

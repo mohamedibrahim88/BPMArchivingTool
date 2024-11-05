@@ -1,10 +1,9 @@
 package com.archiving.archivingTool.client;
 
-import com.archiving.archivingTool.DTO.Result;
+import com.archiving.archivingTool.dto.Result;
 import com.archiving.archivingTool.model.Diagram;
 import com.archiving.archivingTool.model.ExposedItemsDetails;
 import com.archiving.archivingTool.model.Step;
-import jdk.jshell.Diag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;

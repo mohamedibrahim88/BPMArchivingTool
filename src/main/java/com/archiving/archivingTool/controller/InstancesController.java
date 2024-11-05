@@ -1,9 +1,9 @@
 package com.archiving.archivingTool.controller;
 
-import com.archiving.archivingTool.DTO.DeleteSnapshotDTO;
-import com.archiving.archivingTool.DTO.ProcessSnapshotDTO;
-import com.archiving.archivingTool.DTO.InstancesListDTO;
-import com.archiving.archivingTool.DTO.Result;
+import com.archiving.archivingTool.dto.DeleteSnapshotDTO;
+import com.archiving.archivingTool.dto.ProcessSnapshotDTO;
+import com.archiving.archivingTool.dto.InstancesListDTO;
+import com.archiving.archivingTool.dto.Result;
 import com.archiving.archivingTool.model.DeleteSnapshotDetails;
 import com.archiving.archivingTool.model.Instances;
 import com.archiving.archivingTool.model.TerminatedInstanceDetails;

@@ -1,11 +1,10 @@
 package com.archiving.archivingTool.client;
 
-import com.archiving.archivingTool.DTO.*;
+import com.archiving.archivingTool.dto.*;
 import com.archiving.archivingTool.model.DeleteSnapshotDetails;
 import com.archiving.archivingTool.model.Instances;
 import com.archiving.archivingTool.model.TerminatedInstanceDetails;
 import com.archiving.archivingTool.service.LoginTokenService;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
