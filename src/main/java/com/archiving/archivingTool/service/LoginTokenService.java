@@ -1,9 +1,7 @@
 package com.archiving.archivingTool.service;
 
-import com.archiving.archivingTool.DTO.DeleteSnapshotDTO;
-import com.archiving.archivingTool.DTO.LoginTokenDTO;
+import com.archiving.archivingTool.dto.LoginTokenDTO;
 import com.archiving.archivingTool.client.LoginToken;
-import com.archiving.archivingTool.model.DeleteSnapshotDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

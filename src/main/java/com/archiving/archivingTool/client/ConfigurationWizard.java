@@ -1,6 +1,6 @@
 package com.archiving.archivingTool.client;
 
-import com.archiving.archivingTool.DTO.Result;
+import com.archiving.archivingTool.dto.Result;
 import com.archiving.archivingTool.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;

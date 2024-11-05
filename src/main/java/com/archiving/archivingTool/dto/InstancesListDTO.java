@@ -1,14 +1,16 @@
-package com.archiving.archivingTool.DTO;
+package com.archiving.archivingTool.dto;
 
 import lombok.*;
 
 import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Result<T> {
-    String status ;
-    T data;
+public class InstancesListDTO {
+
+    List<String> instancesIDs;
+
 }
