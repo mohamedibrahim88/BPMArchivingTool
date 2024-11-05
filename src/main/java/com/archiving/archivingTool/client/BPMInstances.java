@@ -116,7 +116,7 @@ public class BPMInstances {
     public TerminatedInstanceDetails terminateInstances(InstancesListDTO instancesIDs) {
 
         String instancesIDsStr = instancesIDs.getInstancesIDs().toString();
-//        instancesIDsStr = instancesIDsStr.replace(",", "%2C");
+//      instancesIDsStr = instancesIDsStr.replace(",", "%2C");
         instancesIDsStr = instancesIDsStr.replace("[", "");
         instancesIDsStr = instancesIDsStr.replace("]", "");
         instancesIDsStr = instancesIDsStr.replace(" ", "");

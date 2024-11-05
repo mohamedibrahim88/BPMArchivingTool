@@ -23,7 +23,7 @@ public class DataSourceConfig {
                 .driverClassName("oracle.jdbc.OracleDriver").build();
     }
 
-    @Bean
+    @Bean()
 //    @ConfigurationProperties(prefix="spring.archiving")
     public DataSource archivingDataSource() {
         return DataSourceBuilder.create()
@@ -33,7 +33,7 @@ public class DataSourceConfig {
                 .driverClassName("oracle.jdbc.OracleDriver").build();
     }
 
-    @Bean
+    @Bean(name="entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean bpmEntityManagerFactory(
             DataSource bpmDataSource) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
