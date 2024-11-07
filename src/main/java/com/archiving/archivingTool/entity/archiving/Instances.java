@@ -4,12 +4,18 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
-import lombok.Data;
+import lombok.*;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
-import java.util.Set;
+import java.util.List;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @Entity
+@EnableAutoConfiguration
 public class Instances {
     @Id
     private String piID;
@@ -22,8 +28,8 @@ public class Instances {
     private String jsonObject;
 
     @ManyToOne
-    private Set<Snapshots> snapshotsI;
+    private Snapshots snapshotsI;
 
     @ManyToOne
-    private Set<ProcessApps> processAppsI;
+    private ProcessApps processAppsI;
 }

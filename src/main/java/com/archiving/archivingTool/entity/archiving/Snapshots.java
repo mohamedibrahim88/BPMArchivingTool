@@ -1,12 +1,19 @@
 package com.archiving.archivingTool.entity.archiving;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
+import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @Entity
+@EnableAutoConfiguration
 public class Snapshots {
     @Id
     private String snapshotID;
@@ -20,8 +27,8 @@ public class Snapshots {
     private ProcessApps processApps;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "snapshots")
-   private Set<Tasks>tasks;
+   private List<Tasks> tasks;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "snapshotsI")
-    private Set<Instances>instances;
+    private List<Instances>instances;
 }

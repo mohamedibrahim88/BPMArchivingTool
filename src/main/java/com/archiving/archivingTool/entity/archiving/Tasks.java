@@ -4,12 +4,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
-import lombok.Data;
+import lombok.*;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
+import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @Entity
+@EnableAutoConfiguration
 public class Tasks {
     @Id
     private String ID;
@@ -22,5 +29,5 @@ public class Tasks {
     private String jsonView;
 
     @ManyToOne
-    private Set<Snapshots>snapshots;
+    private Snapshots snapshots;
 }

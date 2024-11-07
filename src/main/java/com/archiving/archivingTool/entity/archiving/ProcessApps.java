@@ -1,11 +1,20 @@
 package com.archiving.archivingTool.entity.archiving;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
+import java.util.List;
 import java.util.Set;
-@Data
+import java.util.UUID;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @Entity
+@EnableAutoConfiguration
 public class ProcessApps {
     @Id
     private  String appID;
@@ -13,17 +22,16 @@ public class ProcessApps {
     private  String branchID;
     private  String acronym;
     private  String name;
-    private  String relationStartDate;
-
+    private  String retentionStartDate;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "processApps")
-    private Set<Snapshots> snapshots;
+    private List<Snapshots> snapshots;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "processAppsI")
-    private Set<Instances> instances;
+    private List<Instances> instances;
 
     @ManyToMany
     @JoinTable(name = "ProcessApps_Groups",
     joinColumns = @JoinColumn(name = "processApp_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id"))
-    private Set<Groups> groups;
+    private List<Groups> groups;
 }

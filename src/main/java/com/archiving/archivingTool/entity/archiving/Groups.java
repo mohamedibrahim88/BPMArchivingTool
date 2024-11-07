@@ -1,12 +1,20 @@
 package com.archiving.archivingTool.entity.archiving;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
+import java.util.List;
 import java.util.Set;
 
-@Data
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @Entity
+@EnableAutoConfiguration
 public class Groups {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,5 +22,5 @@ public class Groups {
     private String groupName;
 
     @ManyToMany(mappedBy = "groups")
-    private Set<ProcessApps>processApps;
+    private List<ProcessApps> processApps;
 }
