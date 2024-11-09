@@ -28,7 +28,14 @@
 	</scm>
 	<properties>
 		<java.version>22</java.version>
+
+		<jakarta-persistence.version>3.1.0</jakarta-persistence.version>
+
+		<!-- version 3.2.0-M1 does not work
+        <jakarta-persistence.version>3.2.0-M1</jakarta-persistence.version>
+        -->
 	</properties>
+
 	<repositories>
 		<repository>
 			<id>oracle.repo</id>
