@@ -23,6 +23,7 @@ public class ProcessApps {
     private  String acronym;
     private  String name;
     private  String retentionStartDate;
+    private boolean isConfigured;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "processApps")
     private List<Snapshots> snapshots;
 

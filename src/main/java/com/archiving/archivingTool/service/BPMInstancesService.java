@@ -1,9 +1,9 @@
 package com.archiving.archivingTool.service;
 
-import com.archiving.archivingTool.dto.DeleteSnapshotDTO;
-import com.archiving.archivingTool.dto.ProcessSnapshotDTO;
-import com.archiving.archivingTool.dto.InstancesListDTO;
-import com.archiving.archivingTool.dto.Result;
+import com.archiving.archivingTool.dto.bpm.DeleteSnapshotDTO;
+import com.archiving.archivingTool.dto.bpm.ProcessSnapshotDTO;
+import com.archiving.archivingTool.dto.bpm.InstancesListDTO;
+import com.archiving.archivingTool.dto.bpm.Result;
 import com.archiving.archivingTool.client.BPMInstances;
 import com.archiving.archivingTool.model.DeleteSnapshotDetails;
 import com.archiving.archivingTool.model.Instances;

@@ -1,6 +1,6 @@
 package com.archiving.archivingTool.client;
 
-import com.archiving.archivingTool.dto.Result;
+import com.archiving.archivingTool.dto.bpm.Result;
 import com.archiving.archivingTool.model.Diagram;
 import com.archiving.archivingTool.model.ExposedItemsDetails;
 import com.archiving.archivingTool.model.Step;

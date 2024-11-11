@@ -1,6 +1,6 @@
 package com.archiving.archivingTool.client;
 
-import com.archiving.archivingTool.dto.LoginTokenDTO;
+import com.archiving.archivingTool.dto.bpm.LoginTokenDTO;
 import com.archiving.archivingTool.model.LoginTokenDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;

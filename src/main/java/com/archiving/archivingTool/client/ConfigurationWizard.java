@@ -1,11 +1,17 @@
 package com.archiving.archivingTool.client;
 
-import com.archiving.archivingTool.dto.Result;
+import com.archiving.archivingTool.dto.archiving.ProcessConfigDto;
+import com.archiving.archivingTool.dto.bpm.Result;
+import com.archiving.archivingTool.entity.archiving.ProcessApps;
+import com.archiving.archivingTool.mapper.ProcessMapper;
 import com.archiving.archivingTool.model.*;
+import com.archiving.archivingTool.repository.archiving.ProcessAppRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -13,9 +19,16 @@ import java.util.List;
 
 @Component
 public class ConfigurationWizard {
+    private final ProcessAppRepository processAppRepository;
+    private PlatformTransactionManager archivingTransactionManager;
     private String bpmServerUrl = "https://bpmsrv:9443/";
     @Autowired
     private RestTemplate restTemplate;
+
+    public ConfigurationWizard(ProcessAppRepository processAppRepository) {
+        this.processAppRepository = processAppRepository;
+    }
+
     public ProcessAppsData getProcesses(String username, String password) {
         String bpmApiUrl = bpmServerUrl +"/rest/bpm/wle/v1/processApps";
 //        List<InstalledSnapshots> installedSnapshots= new ArrayList<>();
@@ -133,5 +146,13 @@ public class ConfigurationWizard {
         }
         exposedProcesses.setExposedItemsList(exposedItemsDetailsList);
         return exposedProcesses;
+    }
+
+    @Transactional("archivingTransactionManager")
+    public ResponseEntity<String> configProcess(ProcessConfigDto processConfigDto)
+    {
+        ProcessApps processApps= ProcessMapper.INSTANCE.fromDtoToProcessEntity(processConfigDto);
+        processAppRepository.save(processApps);
+        return ResponseEntity.ok("Configured");
     }
 }

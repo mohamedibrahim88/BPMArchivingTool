@@ -1,6 +1,6 @@
 package com.archiving.archivingTool.service;
 
-import com.archiving.archivingTool.dto.LoginTokenDTO;
+import com.archiving.archivingTool.dto.bpm.LoginTokenDTO;
 import com.archiving.archivingTool.client.LoginToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package com.archiving.archivingTool.client;
 
-import com.archiving.archivingTool.dto.*;
+import com.archiving.archivingTool.dto.bpm.*;
 import com.archiving.archivingTool.model.DeleteSnapshotDetails;
 import com.archiving.archivingTool.model.Instances;
 import com.archiving.archivingTool.model.TerminatedInstanceDetails;

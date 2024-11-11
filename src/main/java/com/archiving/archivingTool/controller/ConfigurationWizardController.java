@@ -1,15 +1,14 @@
 package com.archiving.archivingTool.controller;
 
+import com.archiving.archivingTool.dto.archiving.ProcessConfigDto;
 import com.archiving.archivingTool.model.ExposedProcesses;
 import com.archiving.archivingTool.model.InstalledSnapshots;
 import com.archiving.archivingTool.model.ProcessAppsData;
 import com.archiving.archivingTool.model.ExposedItemsDetails;
 import com.archiving.archivingTool.service.ConfigurationWizardService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,5 +39,13 @@ public class ConfigurationWizardController {
     @GetMapping("/exposed/process")
     public ExposedProcesses getExposedProcesses(@RequestParam String processAppID) {
         return configurationWizardService.getExposedProcesses(processAppID);
+
+    }
+    @PostMapping("configProcess")
+
+    public ResponseEntity<String> configProcess(ProcessConfigDto processConfigDto)
+    {
+
+        return configurationWizardService.processConfig(processConfigDto);
     }
 }

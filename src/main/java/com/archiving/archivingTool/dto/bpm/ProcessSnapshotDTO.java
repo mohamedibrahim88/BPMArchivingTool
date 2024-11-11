@@ -1,4 +1,4 @@
-package com.archiving.archivingTool.dto;
+package com.archiving.archivingTool.dto.bpm;
 
 import lombok.*;
 
