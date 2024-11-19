@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-public interface ProcessAppRepository extends JpaRepository<ProcessApps,String > {
+public interface ProcessAppRepository extends JpaRepository<ProcessApps,Long > {
 
 }

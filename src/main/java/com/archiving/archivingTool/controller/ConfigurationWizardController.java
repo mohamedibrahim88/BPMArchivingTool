@@ -1,6 +1,7 @@
 package com.archiving.archivingTool.controller;
 
 import com.archiving.archivingTool.dto.archiving.ProcessConfigDto;
+import com.archiving.archivingTool.dto.archiving.SnapshotDto;
 import com.archiving.archivingTool.model.ExposedProcesses;
 import com.archiving.archivingTool.model.InstalledSnapshots;
 import com.archiving.archivingTool.model.ProcessAppsData;
@@ -25,15 +26,15 @@ public class ConfigurationWizardController {
     }
 
     @GetMapping()
-    public ProcessAppsData getProcesses(@RequestParam String username, @RequestParam String password){
+    public ProcessAppsData getProcesses(){
         assert configurationWizardService != null;
-       return configurationWizardService.getGetBPMProcesses(username, password);
+       return configurationWizardService.getGetBPMProcesses();
     }
 
     @GetMapping("/snapshots")
-    public List<InstalledSnapshots> getInstalledSnapshots(@RequestParam String username, @RequestParam String password, @RequestParam String processID){
+    public List<InstalledSnapshots> getInstalledSnapshots(@RequestParam String processID){
         assert configurationWizardService != null;
-        return configurationWizardService.getInstalledSnapshots(username, password, processID);
+        return configurationWizardService.getInstalledSnapshots(processID);
     }
 
     @GetMapping("/exposed/process")
@@ -41,11 +42,15 @@ public class ConfigurationWizardController {
         return configurationWizardService.getExposedProcesses(processAppID);
 
     }
-    @PostMapping("configProcess")
+    @PostMapping("configuration/process")
+    public ResponseEntity<String> configProcess(@RequestBody ProcessConfigDto processConfigDto) {
 
-    public ResponseEntity<String> configProcess(ProcessConfigDto processConfigDto)
+        return configurationWizardService.processConfiguration(processConfigDto);
+    }
+
+    @PostMapping("configuration/snapshots")
+    public ResponseEntity<String> snapshotConfiguration(@RequestBody List<SnapshotDto> snapshotDtoList)
     {
-
-        return configurationWizardService.processConfig(processConfigDto);
+        return configurationWizardService.snapshotConfiguration(snapshotDtoList);
     }
 }

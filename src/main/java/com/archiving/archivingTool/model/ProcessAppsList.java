@@ -12,14 +12,17 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class ProcessAppsList {
-    String shortName;
+
+    @JsonProperty("shortName")
+    String acronym;
+    @JsonProperty("name")
     String name;
     String description;
     String richDescription;
     String lastModifiedBy;
     String defaultVersion;
     @JsonProperty("ID")
-    String ID;
+    String appID;
     String lastModified_on;
     List<InstalledSnapshots> installedSnapshots;
 

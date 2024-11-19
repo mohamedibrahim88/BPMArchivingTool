@@ -2,6 +2,7 @@ package com.archiving.archivingTool.service;
 
 import com.archiving.archivingTool.client.ConfigurationWizard;
 import com.archiving.archivingTool.dto.archiving.ProcessConfigDto;
+import com.archiving.archivingTool.dto.archiving.SnapshotDto;
 import com.archiving.archivingTool.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,20 +18,24 @@ public class ConfigurationWizardService {
     @Autowired
     private ConfigurationWizard configurationWizard;
 
-    public ProcessAppsData getGetBPMProcesses(String username, String password) {
-       return configurationWizard.getProcesses(username, password);
+    public ProcessAppsData getGetBPMProcesses() {
+       return configurationWizard.getProcesses();
     }
 
-    public List<InstalledSnapshots> getInstalledSnapshots(String username, String password, String processID) {
-        return configurationWizard.getInstalledSnapshots(username, password, processID);
+    public List<InstalledSnapshots> getInstalledSnapshots(String processID) {
+        return configurationWizard.getInstalledSnapshots(processID);
     }
 
     public ExposedProcesses getExposedProcesses(String processAppID) {
         return configurationWizard.getExposedProcesses(processAppID);
     }
 
-    public ResponseEntity<String> processConfig(ProcessConfigDto processConfigDto)
+    public ResponseEntity<String> processConfiguration(ProcessConfigDto processConfigDto) {
+        return configurationWizard.processConfiguration(processConfigDto);
+    }
+
+    public ResponseEntity<String> snapshotConfiguration(List<SnapshotDto> snapshotDtoList)
     {
-        return configurationWizard.configProcess(processConfigDto);
+        return configurationWizard.snapshotConfiguration(snapshotDtoList);
     }
 }

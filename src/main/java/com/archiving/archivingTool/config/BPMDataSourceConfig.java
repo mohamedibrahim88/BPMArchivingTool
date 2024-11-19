@@ -27,7 +27,7 @@ public class BPMDataSourceConfig {
     public DataSource bpmDataSource (){
            return   DataSourceBuilder.create()
             .url("jdbc:oracle:thin:@//oradb:1521/XE")
-                .username("process_db")
+                .username("PROCESS_DB")
                 .password("dbadmin")
                 .driverClassName("oracle.jdbc.OracleDriver").build();
     }
@@ -45,10 +45,10 @@ public class BPMDataSourceConfig {
 
     @Bean(name="bpmEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean bpmEntityManagerFactory(
-            DataSource archivingDataSource) throws SQLException {
-        System.out.println("DataSource: " + archivingDataSource);
+            DataSource bpmDataSource) throws SQLException {
+        System.out.println("DataSource: " + bpmDataSource());
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-        em.setDataSource(archivingDataSource);
+        em.setDataSource(bpmDataSource);
         em.setPackagesToScan("com.archiving.archivingTool.entity.bpm");
         em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         em.setEntityManagerFactoryInterface(EntityManagerFactory.class);

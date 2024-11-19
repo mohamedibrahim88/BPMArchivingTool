@@ -9,7 +9,6 @@ public class ArchivingToolApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ArchivingToolApplication.class, args);
-
 	}
 
 }
