@@ -1,9 +1,8 @@
 package com.archiving.archivingTool.mapper;
 
 import com.archiving.archivingTool.dto.archiving.SnapshotDto;
-import com.archiving.archivingTool.entity.archiving.Snapshots;
+import com.archiving.archivingTool.entity.archiving.SnapshotsEntity;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public interface SnapshotMapper {
 //    @Mapping(source = "isActive", target = "isActive")
 //    @Mapping(source = "activeSince", target = "activeSince")
 //    @Mapping(source = "createdOn", target = "createdOn")
-    SnapshotDto fromSnapshotEntityToDto(Snapshots snapshots);
+    SnapshotDto fromSnapshotEntityToDto(SnapshotsEntity snapshotsEntity);
 
 //    @Mapping(source = "ID", target = "ID")
 //    @Mapping(source = "snapshotID", target = "snapshotID")
@@ -29,7 +28,7 @@ public interface SnapshotMapper {
 //    @Mapping(source = "isActive", target = "isActive")
 //    @Mapping(source = "activeSince", target = "activeSince")
 //    @Mapping(source = "createdOn", target = "createdOn")
-    Snapshots fromSnapshotDtoToEntity(SnapshotDto snapshotDto);
+    SnapshotsEntity fromSnapshotDtoToEntity(SnapshotDto snapshotDto);
 
     //    @Mapping(source = "ID", target = "ID")
 //    @Mapping(source = "snapshotID", target = "snapshotID")
@@ -38,7 +37,7 @@ public interface SnapshotMapper {
 //    @Mapping(source = "isActive", target = "isActive")
 //    @Mapping(source = "activeSince", target = "activeSince")
 //    @Mapping(source = "createdOn", target = "createdOn")
-    List<SnapshotDto> fromSnapshotEntityListToDto(List<Snapshots> snapshotsList);
+    List<SnapshotDto> fromSnapshotEntityListToDto(List<SnapshotsEntity> snapshotsEntityList);
 
     //    @Mapping(source = "ID", target = "ID")
 //    @Mapping(source = "snapshotID", target = "snapshotID")
@@ -47,5 +46,5 @@ public interface SnapshotMapper {
 //    @Mapping(source = "isActive", target = "isActive")
 //    @Mapping(source = "activeSince", target = "activeSince")
 //    @Mapping(source = "createdOn", target = "createdOn")
-    List<Snapshots> fromSnapshotDtoListToEntity(List<SnapshotDto> snapshotDtoList);
+    List<SnapshotsEntity> fromSnapshotDtoListToEntity(List<SnapshotDto> snapshotDtoList);
 }

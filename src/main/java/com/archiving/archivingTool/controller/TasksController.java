@@ -23,10 +23,10 @@ public class TasksController {
       return tasksService.getProcessTasks(exposedItemsDetails);
     }
 
-    @GetMapping("/view")
-    public Optional<Lsw_Process> getCoachView(@RequestParam String processID, @RequestParam String versionID)
-    {
-        return tasksService.getCoachView(processID,versionID);
-
-    }
+//    @GetMapping("/view")
+//    public Optional<Lsw_Process> getCoachView(@RequestParam String processID, @RequestParam String versionID)
+//    {
+//        return tasksService.getCoachView(processID,versionID);
+//
+//    }
 }

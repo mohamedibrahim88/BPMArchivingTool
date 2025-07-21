@@ -5,8 +5,6 @@ import lombok.*;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -15,7 +13,8 @@ import java.util.UUID;
 @ToString
 @Entity
 @EnableAutoConfiguration
-public class ProcessApps {
+@Table(name="ProcessApps")
+public class ProcessAppsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private  Long ID;
@@ -31,14 +30,14 @@ public class ProcessApps {
     private boolean isConfigured;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "processApps")
-    private List<Snapshots> snapshots;
+    private List<SnapshotsEntity> snapshots;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "processAppsI")
-    private List<Instances> instances;
+    private List<InstancesEntity> instances;
 
     @ManyToMany
     @JoinTable(name = "ProcessApps_Groups",
     joinColumns = @JoinColumn(name = "processApp_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id"))
-    private List<Groups> groups;
+    private List<GroupsEntity> groups;
 }

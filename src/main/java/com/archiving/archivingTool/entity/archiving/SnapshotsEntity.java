@@ -5,7 +5,6 @@ import lombok.*;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -14,7 +13,8 @@ import java.util.Set;
 @ToString
 @Entity
 @EnableAutoConfiguration
-public class Snapshots {
+@Table(name="Snapshots")
+public class SnapshotsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private  Long ID;
@@ -33,11 +33,11 @@ public class Snapshots {
 
     @ManyToOne
     @JoinColumn(name="app_id")
-    private ProcessApps processApps;
+    private ProcessAppsEntity processApps;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "snapshots")
-   private List<Tasks> tasks;
+   private List<TasksEntity> tasks;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "snapshotsI")
-    private List<Instances>instances;
+    private List<InstancesEntity>instances;
 }

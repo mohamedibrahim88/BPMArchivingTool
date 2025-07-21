@@ -1,14 +1,19 @@
 package com.archiving.archivingTool.client;
 
+import com.archiving.archivingTool.dto.archiving.ArchivingServerDTO;
 import com.archiving.archivingTool.dto.archiving.ProcessConfigDto;
 import com.archiving.archivingTool.dto.archiving.SnapshotDto;
 import com.archiving.archivingTool.dto.bpm.Result;
-import com.archiving.archivingTool.entity.archiving.ProcessApps;
-import com.archiving.archivingTool.entity.archiving.Snapshots;
+import com.archiving.archivingTool.entity.archiving.ArchivingServersEntity;
+import com.archiving.archivingTool.entity.archiving.ProcessAppsEntity;
+import com.archiving.archivingTool.entity.archiving.ServerTypesEntity;
+import com.archiving.archivingTool.entity.archiving.SnapshotsEntity;
 import com.archiving.archivingTool.mapper.ProcessMapper;
 import com.archiving.archivingTool.mapper.SnapshotMapper;
 import com.archiving.archivingTool.model.*;
 import com.archiving.archivingTool.repository.archiving.ProcessAppRepository;
+import com.archiving.archivingTool.repository.archiving.ServerConfigRepository;
+import com.archiving.archivingTool.repository.archiving.ServerTypesRepository;
 import com.archiving.archivingTool.repository.archiving.SnapshotsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,11 +26,14 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ConfigurationWizard {
     private final ProcessAppRepository processAppRepository;
     private final SnapshotsRepository snapshotsRepository;
+    private final ServerTypesRepository serverTypesRepository;
+    private final ServerConfigRepository serverConfigRepository;
     private PlatformTransactionManager archivingTransactionManager;
   //  private String bpmServerUrl = "https://bpmsrv:9443/";
   @Autowired
@@ -37,13 +45,36 @@ public class ConfigurationWizard {
 
 @Value("${bpm.password}")
 private String password;
-    public ConfigurationWizard(ProcessAppRepository processAppRepository, SnapshotsRepository snapshotsRepository) {
+    public ConfigurationWizard(ProcessAppRepository processAppRepository, SnapshotsRepository snapshotsRepository, ServerTypesRepository serverTypesRepository, ServerConfigRepository serverConfigRepository) {
         this.processAppRepository = processAppRepository;
         this.snapshotsRepository= snapshotsRepository;
+        this.serverTypesRepository = serverTypesRepository;
+        this.serverConfigRepository = serverConfigRepository;
     }
+    @Transactional("archivingTransactionManager")
+    public Optional<ServerTypesEntity> getServerType(String serverCode){
 
+        Optional<ServerTypesEntity> serverTypesEntity =  serverTypesRepository.findByServerCode(serverCode);
+        return  serverTypesEntity;
+    }
+    @Transactional("archivingTransactionManager")
+    public String getStringConnection(String serverCode){
+        String connectionURL = "";
+        String protocol="";
+        Optional<ArchivingServersEntity> archivingServersEntity =  serverConfigRepository.findByServerCode(serverCode);
+        if (archivingServersEntity.get().getUseSecureConnection()==1){
+            protocol ="https://";
+        }else{
+            protocol ="http://";
+        }
+        connectionURL=protocol+archivingServersEntity.get().getServerHostName()+":"
+                +archivingServersEntity.get().getServerPort()+"/";
+
+        System.out.println("Connection String "+ connectionURL);
+        return connectionURL;
+    }
     public ProcessAppsData getProcesses() {
-        String bpmApiUrl = bpmServerUrl +"/rest/bpm/wle/v1/processApps";
+        String bpmApiUrl = getStringConnection("01_BAW") +"/rest/bpm/wle/v1/processApps";
 //        List<InstalledSnapshots> installedSnapshots= new ArrayList<>();
         ProcessAppsData processAppsLists;
 
@@ -86,7 +117,7 @@ private String password;
 //        List<InstalledSnapshots> installedSnapshots= new ArrayList<>();
         List<InstalledSnapshots> installedSnapshots;
 
-        Result<ProcessAppsData> result = new Result<>();
+        Result<ProcessAppsSnpashots> result = new Result<>();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -94,12 +125,12 @@ private String password;
         headers.setBasicAuth(username, password);
         HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
 
-        ResponseEntity<Result<ProcessAppsData>> response = restTemplate.exchange(
+        ResponseEntity<Result<ProcessAppsSnpashots>> response = restTemplate.exchange(
                 bpmApiUrl,
                 HttpMethod.GET,
                 requestEntity,
                 //Result.class
-                new ParameterizedTypeReference<Result<ProcessAppsData>>(){}
+                new ParameterizedTypeReference<Result<ProcessAppsSnpashots>>(){}
         );
 
 //        ResponseEntity<Result> response = restTemplate.exchange(
@@ -113,7 +144,7 @@ private String password;
         System.out.println(response.getBody());
         result = response.getBody();
         int snapshotIndex = 0;
-        for (ProcessAppsList processAppsList : result.getData().getProcessAppsList()){
+        for (ProcessAppsSnapshotsList processAppsList : result.getData().getProcessAppsList()){
             System.out.println(processAppsList.getAppID() + " = " + processID);
             if (processAppsList.getAppID().equals(processID)){
                 break;
@@ -169,7 +200,7 @@ private String password;
 
         System.out.println("DTO: " + processConfigDto);
 
-        ProcessApps processApps = ProcessMapper.INSTANCE.fromProcessAppDtoToEntity(processConfigDto);
+        ProcessAppsEntity processApps = ProcessMapper.INSTANCE.fromProcessAppDtoToEntity(processConfigDto);
 
         if (processApps == null) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -193,7 +224,7 @@ private String password;
             return ResponseEntity.badRequest().body("ProcessConfigDto is null");
         }
 
-        List<Snapshots> snapshots = SnapshotMapper.INSTANCE.fromSnapshotDtoListToEntity(snapshotDtoList);
+        List<SnapshotsEntity> snapshots = SnapshotMapper.INSTANCE.fromSnapshotDtoListToEntity(snapshotDtoList);
 
         System.out.println(snapshots);
         if (snapshots == null) {

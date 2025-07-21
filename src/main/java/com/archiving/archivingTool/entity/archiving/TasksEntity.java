@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
-import java.util.List;
-import java.util.Set;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -14,7 +11,8 @@ import java.util.Set;
 @ToString
 @Entity
 @EnableAutoConfiguration
-public class Tasks {
+@Table(name="Tasks")
+public class TasksEntity {
     @Id
     private String ID;
     @Column(name="name")
@@ -33,5 +31,5 @@ public class Tasks {
 
     @ManyToOne
     @JoinColumn(name = "snapshot_id")
-    private Snapshots snapshots;
+    private SnapshotsEntity snapshots;
 }

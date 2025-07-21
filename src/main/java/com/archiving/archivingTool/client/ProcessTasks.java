@@ -5,7 +5,7 @@ import com.archiving.archivingTool.entity.bpm.Lsw_Process;
 import com.archiving.archivingTool.model.Diagram;
 import com.archiving.archivingTool.model.ExposedItemsDetails;
 import com.archiving.archivingTool.model.Step;
-import com.archiving.archivingTool.repository.bpm.TaskViewRepository;
+//import com.archiving.archivingTool.repository.bpm.TaskViewRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +25,10 @@ public class ProcessTasks {
     private String bpmServerUrl = "https://bpmsrv:9443/";
     @Autowired
     private RestTemplate restTemplate;
-    private final TaskViewRepository taskViewRepository;
-    public ProcessTasks(TaskViewRepository taskViewRepository) {
-        this.taskViewRepository = taskViewRepository;
-    }
+//    private final TaskViewRepository taskViewRepository;
+//    public ProcessTasks(TaskViewRepository taskViewRepository) {
+//        this.taskViewRepository = taskViewRepository;
+//    }
 
     public List<Step> getProcessTasks (ExposedItemsDetails exposedItemsDetails)
     {
@@ -74,11 +74,11 @@ public class ProcessTasks {
         return filteredList;
     }
 
-    @Transactional("bpmTransactionManager")
-    public Optional<Lsw_Process> getCoachView (String processID, String versionID)
-    {
-        Optional<Lsw_Process> lswProcess = taskViewRepository.findById(versionID);
-
-        return lswProcess;
-    }
+//    @Transactional("bpmTransactionManager")
+//    public Optional<Lsw_Process> getCoachView (String processID, String versionID)
+//    {
+//        Optional<Lsw_Process> lswProcess = taskViewRepository.findById(versionID);
+//
+//        return lswProcess;
+//    }
 }

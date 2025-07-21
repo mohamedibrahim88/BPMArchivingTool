@@ -5,7 +5,6 @@ import lombok.*;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import java.util.List;
-import java.util.Set;
 
 
 @Getter
@@ -15,7 +14,8 @@ import java.util.Set;
 @ToString
 @Entity
 @EnableAutoConfiguration
-public class Groups {
+@Table(name="Groups")
+public class GroupsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,5 +23,5 @@ public class Groups {
     private String groupName;
 
     @ManyToMany(mappedBy = "groups")
-    private List<ProcessApps> processApps;
+    private List<ProcessAppsEntity> processApps;
 }

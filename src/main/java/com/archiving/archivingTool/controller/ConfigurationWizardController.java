@@ -25,7 +25,7 @@ public class ConfigurationWizardController {
         configurationWizardService = null;
     }
 
-    @GetMapping()
+    @GetMapping("/processes")
     public ProcessAppsData getProcesses(){
         assert configurationWizardService != null;
        return configurationWizardService.getGetBPMProcesses();
@@ -37,18 +37,18 @@ public class ConfigurationWizardController {
         return configurationWizardService.getInstalledSnapshots(processID);
     }
 
-    @GetMapping("/exposed/process")
-    public ExposedProcesses getExposedProcesses(@RequestParam String processAppID) {
-        return configurationWizardService.getExposedProcesses(processAppID);
-
-    }
-    @PostMapping("configuration/process")
+//    @GetMapping("/exposed/process")
+//    public ExposedProcesses getExposedProcesses(@RequestParam String processAppID) {
+//        return configurationWizardService.getExposedProcesses(processAppID);
+//
+//    }
+    @PostMapping("config/process")
     public ResponseEntity<String> configProcess(@RequestBody ProcessConfigDto processConfigDto) {
 
         return configurationWizardService.processConfiguration(processConfigDto);
     }
 
-    @PostMapping("configuration/snapshots")
+    @PostMapping("config/snapshots")
     public ResponseEntity<String> snapshotConfiguration(@RequestBody List<SnapshotDto> snapshotDtoList)
     {
         return configurationWizardService.snapshotConfiguration(snapshotDtoList);

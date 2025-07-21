@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
-import java.util.List;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -13,7 +11,8 @@ import java.util.List;
 @ToString
 @Entity
 @EnableAutoConfiguration
-public class Instances {
+@Table(name="Instances")
+public class InstancesEntity {
     @Id
     private String piID;
     @Column(name="process_acronym")
@@ -32,9 +31,9 @@ public class Instances {
 
     @ManyToOne
     @JoinColumn(name="snapshot_id")
-    private Snapshots snapshotsI;
+    private SnapshotsEntity snapshotsI;
 
     @ManyToOne
     @JoinColumn(name="app_id")
-    private ProcessApps processAppsI;
+    private ProcessAppsEntity processAppsI;
 }

@@ -24,6 +24,6 @@ public class ProcessAppsList {
     @JsonProperty("ID")
     String appID;
     String lastModified_on;
-    List<InstalledSnapshots> installedSnapshots;
+    //List<InstalledSnapshots> installedSnapshots;
 
 }

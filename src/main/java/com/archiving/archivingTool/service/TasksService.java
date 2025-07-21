@@ -21,8 +21,8 @@ public class TasksService {
  {
     return processTasks.getProcessTasks(exposedItemsDetails);
  }
-    public Optional<Lsw_Process> getCoachView (String processID, String versionID){
-     return processTasks.getCoachView(processID,versionID);
-    }
+//    public Optional<Lsw_Process> getCoachView (String processID, String versionID){
+//     return processTasks.getCoachView(processID,versionID);
+//    }
 
 }
