@@ -25,8 +25,8 @@ public class ServerConfigClient {
     @Autowired
     private ServerConfigRepository repository;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+//    @Autowired
+//    private JdbcTemplate jdbcTemplate;
 
     private PlatformTransactionManager archivingTransactionManager;
 

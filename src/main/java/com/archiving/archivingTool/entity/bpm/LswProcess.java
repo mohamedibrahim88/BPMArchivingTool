@@ -1,10 +1,6 @@
 package com.archiving.archivingTool.entity.bpm;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 @Getter
 @Setter
@@ -13,14 +9,15 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 @ToString
 @Entity
 @Table(name = "LSW_PROCESS")
-public class Lsw_Process {
+public class LswProcess {
     @Column(name="PROCESS_ID")
     private String taskID;
-
-//    @Column(name="DATA")
-//    private String data;
 
     @Id
     @Column(name="VERSION_ID")
     private String versionID;
+
+    @Lob
+    @Column(name = "DATA") // replace with your actual XML column name
+    private byte[] xmlData;
 }
