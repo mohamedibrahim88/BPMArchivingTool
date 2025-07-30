@@ -1,23 +1,18 @@
 package com.archiving.archivingTool.client;
 
 import com.archiving.archivingTool.dto.bpm.Result;
-import com.archiving.archivingTool.entity.bpm.Lsw_Process;
 import com.archiving.archivingTool.model.Diagram;
 import com.archiving.archivingTool.model.ExposedItemsDetails;
 import com.archiving.archivingTool.model.Step;
 //import com.archiving.archivingTool.repository.bpm.TaskViewRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class ProcessTasks {
@@ -75,9 +70,9 @@ public class ProcessTasks {
     }
 
 //    @Transactional("bpmTransactionManager")
-//    public Optional<Lsw_Process> getCoachView (String processID, String versionID)
+//    public Optional<LswProcess> getCoachView (String processID, String versionID)
 //    {
-//        Optional<Lsw_Process> lswProcess = taskViewRepository.findById(versionID);
+//        Optional<LswProcess> lswProcess = taskViewRepository.findById(versionID);
 //
 //        return lswProcess;
 //    }
