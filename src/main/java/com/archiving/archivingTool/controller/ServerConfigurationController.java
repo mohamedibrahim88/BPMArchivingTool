@@ -33,4 +33,10 @@ public class ServerConfigurationController {
     public ResponseEntity<String> testServer(@RequestBody ServerConnectionRequestDTO request) {
         return archivingService.testConnection(request);
     }
+
+    @GetMapping("getServer")
+    public ArchivingServerDTO getServerByServerCode(@RequestParam String serverCode){
+
+        return archivingService.getServerByServerCode(serverCode);
+    }
 }

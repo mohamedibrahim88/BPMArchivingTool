@@ -5,6 +5,7 @@ import com.archiving.archivingTool.dto.archiving.ServerConnectionRequestDTO;
 import com.archiving.archivingTool.entity.archiving.ArchivingServersEntity;
 import com.archiving.archivingTool.mapper.ServerConfigMapper;
 import com.archiving.archivingTool.repository.archiving.ServerConfigRepository;
+import com.archiving.archivingTool.repository.bpm.LswProcessRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -17,6 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ServerConfigClient {
@@ -24,7 +26,8 @@ public class ServerConfigClient {
     private RestTemplate restTemplate;
     @Autowired
     private ServerConfigRepository repository;
-
+    @Autowired
+    private LswProcessRepository lswProcessRepository;
 //    @Autowired
 //    private JdbcTemplate jdbcTemplate;
 
@@ -100,9 +103,24 @@ public class ServerConfigClient {
             return ResponseEntity.status(500).body("Failed: " + e.getMessage());
         }
     }
-
-
+    public ResponseEntity<String> testBpmDbConnection(){
+        try {
+            long count = lswProcessRepository.count(); // Simple SELECT COUNT(*)
+            return ResponseEntity.ok("BPM DB connection successful");
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("BPM DB connection failed: " + ex.getMessage());
+        }
     }
+
+    public ArchivingServerDTO getServerByServerCode(String serverCode){
+
+        Optional <ArchivingServersEntity> archivingServersEntity = repository.findByServerCode(serverCode);
+        ArchivingServerDTO server = ServerConfigMapper.INSTANCE.fromArchivingEntityToDTO(archivingServersEntity.get());
+
+        return server;
+    }
+}
 
 
 

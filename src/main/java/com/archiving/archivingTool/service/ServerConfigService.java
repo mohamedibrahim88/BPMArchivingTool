@@ -56,4 +56,9 @@ public class ServerConfigService {
         return serverConfigClient.testConnection(request);
 
     }
+
+    public ArchivingServerDTO getServerByServerCode(String serverCode){
+
+        return serverConfigClient.getServerByServerCode(serverCode);
+    }
 }
