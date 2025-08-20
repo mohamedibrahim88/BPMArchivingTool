@@ -42,12 +42,16 @@ public class ServerConfigClient {
                     .body("Failed to map DTO to ProcessApps entity");
         } else {
 
-            System.out.println("Entity: " + server);
+            if (!repository.isServerExistByHostnameAndPort(dto.getServerHostName(), dto.getServerPort()))
+            {
+                System.out.println("Entity: " + server);
 
-            repository.save(server);
-            repository.flush();
+                repository.save(server);
+                repository.flush();
 
-            return ResponseEntity.ok("Server Added");
+                return ResponseEntity.ok("Server Added");
+            }else
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Server Already Exist");
         }
     }
 
@@ -113,10 +117,10 @@ public class ServerConfigClient {
         }
     }
 
-    public ArchivingServerDTO getServerByServerCode(String serverCode){
+    public List<ArchivingServerDTO> getServerByServerCode(String serverCode){
 
-        Optional <ArchivingServersEntity> archivingServersEntity = repository.findByServerCode(serverCode);
-        ArchivingServerDTO server = ServerConfigMapper.INSTANCE.fromArchivingEntityToDTO(archivingServersEntity.get());
+       List <ArchivingServersEntity> archivingServersEntity = repository.findByServerCode(serverCode);
+       List< ArchivingServerDTO> server = ServerConfigMapper.INSTANCE.fromArchivingEntityListToDTOList(archivingServersEntity);
 
         return server;
     }

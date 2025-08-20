@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/server")
 public class ServerConfigurationController {
@@ -35,7 +37,7 @@ public class ServerConfigurationController {
     }
 
     @GetMapping("getServer")
-    public ArchivingServerDTO getServerByServerCode(@RequestParam String serverCode){
+    public List<ArchivingServerDTO> getServerByServerCode(@RequestParam String serverCode){
 
         return archivingService.getServerByServerCode(serverCode);
     }
