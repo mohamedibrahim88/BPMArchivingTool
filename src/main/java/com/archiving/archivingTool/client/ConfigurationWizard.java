@@ -79,9 +79,9 @@ public class ConfigurationWizard {
     }
 
     @Transactional("archivingTransactionManager")
-    public Optional<ArchivingServersEntity> getCredintials(String serverCode){
+    public ArchivingServersEntity getCredintials(String serverCode){
 
-        Optional<ArchivingServersEntity> archivingServersEntity =  serverConfigRepository.findByServerCode(serverCode);
+        ArchivingServersEntity archivingServersEntity =  serverConfigRepository.findByServerCode(serverCode).get(1);
 
         return archivingServersEntity;
     }
@@ -90,7 +90,7 @@ public class ConfigurationWizard {
         String bpmApiUrl = getStringConnection("01_BAW") +"/rest/bpm/wle/v1/processApps";
         System.out.println("Connection Done");
 
-        Optional<ArchivingServersEntity> creditials;
+        ArchivingServersEntity creditials;
         creditials = getCredintials("01_BAW");
 //        List<InstalledSnapshots> installedSnapshots= new ArrayList<>();
         ProcessAppsData processAppsLists;
@@ -100,7 +100,7 @@ public class ConfigurationWizard {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         // Set authentication if needed (Basic Auth example)
-        headers.setBasicAuth(creditials.get().getUserName(), creditials.get().getUserPassword());
+        headers.setBasicAuth(creditials.getUserName(), creditials.getUserPassword());
         HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
 
         ResponseEntity<Result<ProcessAppsData>> response = restTemplate.exchange(
@@ -134,7 +134,7 @@ public class ConfigurationWizard {
         String bpmApiUrl = getStringConnection("01_BAW") +"/rest/bpm/wle/v1/processApps";
         System.out.println("Connection Done");
 
-        Optional<ArchivingServersEntity> creditials;
+        ArchivingServersEntity creditials;
         creditials = getCredintials("01_BAW");
 //        List<InstalledSnapshots> installedSnapshots= new ArrayList<>();
         List<InstalledSnapshots> installedSnapshots;
@@ -144,7 +144,7 @@ public class ConfigurationWizard {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         // Set authentication if needed (Basic Auth example)
-        headers.setBasicAuth(creditials.get().getUserName(), creditials.get().getUserPassword());
+        headers.setBasicAuth(creditials.getUserName(), creditials.getUserPassword());
         HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
 
         ResponseEntity<Result<ProcessAppsSnpashots>> response = restTemplate.exchange(

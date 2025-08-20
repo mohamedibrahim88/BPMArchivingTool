@@ -46,7 +46,7 @@ public class BPMInstances {
 
     public Instances getAllInstancesBySnapshotID(ProcessSnapshotDTO processSnapshotDTO) {
 
-        Optional<ArchivingServersEntity> creditials;
+        ArchivingServersEntity creditials;
         creditials = configurationWizard.getCredintials("01_BAW");
         String bpmUrl = configurationWizard.getStringConnection("01_BAW");
 
@@ -56,7 +56,7 @@ public class BPMInstances {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        headers.setBasicAuth(creditials.get().getUserName(), creditials.get().getUserPassword());
+        headers.setBasicAuth(creditials.getUserName(), creditials.getUserPassword());
 
         HttpEntity<Object> requestEntity = new HttpEntity<>(processSnapshotDTO, headers);
         ResponseEntity<Result<Instances>> response = restTemplate.exchange(
@@ -75,7 +75,7 @@ public class BPMInstances {
             if (processes.getSnapshotID().equals(processSnapshotDTO.getSnapshotID())) {
                 HttpHeaders newHeaders = new HttpHeaders();
                 newHeaders.setContentType(MediaType.APPLICATION_JSON);
-                newHeaders.setBasicAuth(creditials.get().getUserName(), creditials.get().getUserPassword());
+                newHeaders.setBasicAuth(creditials.getUserName(), creditials.getUserPassword());
                 HttpEntity<Object> newRequestEntity = new HttpEntity<>(newHeaders);
 
                 ResponseEntity<Result<BulkInstanceDetails>> newResponse = restTemplate.exchange(
