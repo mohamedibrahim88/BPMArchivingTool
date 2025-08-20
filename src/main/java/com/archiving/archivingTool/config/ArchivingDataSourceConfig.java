@@ -27,7 +27,7 @@ public class ArchivingDataSourceConfig {
     @Bean(name = "archivingDataSource")
     public DataSource archivingDataSource() {
         return DataSourceBuilder.create()
-                .url("jdbc:oracle:thin:@//localhost:1521/XEPDB1")
+                .url("jdbc:oracle:thin:@//oradb:1521/XEPDB1")
                 .username("Archivingdba")
                 .password("dbadmin")
                 .driverClassName("oracle.jdbc.OracleDriver")

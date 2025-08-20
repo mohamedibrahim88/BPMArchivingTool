@@ -1,5 +1,6 @@
 package com.archiving.archivingTool.model;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.*;
 
 @Getter
@@ -13,8 +14,9 @@ public class Processes {
     String name;
     String bpdName;
     String snapshotID;
-    String dueDate;
+//    String dueDate;
     String executionState;
     String lastModificationTime;
+    JsonNode data;
 
 }

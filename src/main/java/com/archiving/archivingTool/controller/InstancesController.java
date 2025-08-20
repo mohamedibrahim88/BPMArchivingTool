@@ -6,11 +6,14 @@ import com.archiving.archivingTool.dto.bpm.InstancesListDTO;
 import com.archiving.archivingTool.dto.bpm.Result;
 import com.archiving.archivingTool.model.DeleteSnapshotDetails;
 import com.archiving.archivingTool.model.Instances;
+import com.archiving.archivingTool.model.Processes;
 import com.archiving.archivingTool.model.TerminatedInstanceDetails;
 import com.archiving.archivingTool.service.BPMInstancesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/instances")
@@ -23,8 +26,8 @@ public class InstancesController {
         this.bpmInstancesService = null;
     }
     @PostMapping()
-    public void getAllInstancesBySnapshotID(@RequestParam String username,@RequestParam String password,@RequestBody ProcessSnapshotDTO processSnapshotDTO) {
-    bpmInstancesService.getAllInstancesBySnapshotID(username,password,processSnapshotDTO);
+    public Instances getAllInstancesBySnapshotID(@RequestBody ProcessSnapshotDTO processSnapshotDTO) {
+    return bpmInstancesService.getAllInstancesBySnapshotID(processSnapshotDTO);
     }
 
     @GetMapping()
@@ -50,6 +53,12 @@ public class InstancesController {
     public ResponseEntity<Result> getInstancesObject(@RequestBody InstancesListDTO instancesIDs)
     {
         return bpmInstancesService.getInstancesObject(instancesIDs);
+    }
+
+    @PostMapping("config/instances")
+    public ResponseEntity<String> instancesConfiguration(@RequestBody List<Processes> instances) {
+
+        return bpmInstancesService.instancesConfiguration(instances);
     }
 
 }
