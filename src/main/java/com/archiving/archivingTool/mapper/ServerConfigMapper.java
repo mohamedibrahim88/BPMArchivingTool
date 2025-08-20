@@ -6,6 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface ServerConfigMapper {
     ServerConfigMapper INSTANCE = Mappers.getMapper(ServerConfigMapper.class);
@@ -22,4 +24,23 @@ public interface ServerConfigMapper {
     @Mapping(source = "maximumParallelTransaction", target = "maximumParallelTransaction")
     @Mapping(source = "useSecureConnection", target = "useSecureConnection")
     ArchivingServersEntity fromArchivingServerDtoToEntity(ArchivingServerDTO archivingServerDTO);
+
+    @Mapping(source = "ID", target = "ID")
+    @Mapping(source = "serverName", target = "serverName")
+    @Mapping(source = "serverCode", target = "serverCode")
+    @Mapping(source = "serverHostName", target = "serverHostName")
+    @Mapping(source = "contextPath", target = "contextPath")
+    @Mapping(source = "repositoryName", target = "repositoryName")
+    @Mapping(source = "databaseType", target = "databaseType")
+    @Mapping(source = "serverPort", target = "serverPort")
+    @Mapping(source = "userName", target = "userName")
+    @Mapping(source = "userPassword", target = "userPassword")
+    @Mapping(source = "maximumParallelTransaction", target = "maximumParallelTransaction")
+    @Mapping(source = "useSecureConnection", target = "useSecureConnection")
+    ArchivingServerDTO fromArchivingEntityToDTO(ArchivingServersEntity archivingServerEntity);
+
+
+
+    List<ArchivingServerDTO> fromArchivingEntityListToDTOList(List<ArchivingServersEntity> archivingServerEntity);
+
 }

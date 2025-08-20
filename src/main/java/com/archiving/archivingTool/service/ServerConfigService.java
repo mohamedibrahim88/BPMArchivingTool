@@ -14,6 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ServerConfigService {
@@ -55,5 +58,10 @@ public class ServerConfigService {
 
         return serverConfigClient.testConnection(request);
 
+    }
+
+    public List<ArchivingServerDTO> getServerByServerCode(String serverCode){
+
+        return serverConfigClient.getServerByServerCode(serverCode);
     }
 }

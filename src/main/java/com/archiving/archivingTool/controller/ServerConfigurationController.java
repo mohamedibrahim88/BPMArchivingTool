@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/server")
 public class ServerConfigurationController {
@@ -32,5 +34,11 @@ public class ServerConfigurationController {
     @PostMapping("/test-srv")
     public ResponseEntity<String> testServer(@RequestBody ServerConnectionRequestDTO request) {
         return archivingService.testConnection(request);
+    }
+
+    @GetMapping("getServer")
+    public List<ArchivingServerDTO> getServerByServerCode(@RequestParam String serverCode){
+
+        return archivingService.getServerByServerCode(serverCode);
     }
 }

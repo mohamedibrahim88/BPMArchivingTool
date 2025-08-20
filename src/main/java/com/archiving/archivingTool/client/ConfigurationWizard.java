@@ -65,14 +65,14 @@ public class ConfigurationWizard {
     public String getStringConnection(String serverCode){
         String connectionURL = "";
         String protocol="";
-        Optional<ArchivingServersEntity> archivingServersEntity =  serverConfigRepository.findByServerCode(serverCode);
-        if (archivingServersEntity.get().getUseSecureConnection()==1){
+        List<ArchivingServersEntity> archivingServersEntity =  serverConfigRepository.findByServerCode(serverCode);
+        if (archivingServersEntity.get(1).getUseSecureConnection()==1){
             protocol ="https://";
         }else{
             protocol ="http://";
         }
-        connectionURL=protocol+archivingServersEntity.get().getServerHostName()+":"
-                +archivingServersEntity.get().getServerPort()+"/";
+        connectionURL=protocol+archivingServersEntity.get(1).getServerHostName()+":"
+                +archivingServersEntity.get(1).getServerPort()+"/";
 
         System.out.println("Connection String "+ connectionURL);
         return connectionURL;
