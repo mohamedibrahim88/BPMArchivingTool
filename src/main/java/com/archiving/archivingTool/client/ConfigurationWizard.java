@@ -36,21 +36,25 @@ public class ConfigurationWizard {
     private final ServerConfigRepository serverConfigRepository;
     private PlatformTransactionManager archivingTransactionManager;
   //  private String bpmServerUrl = "https://bpmsrv:9443/";
-  @Autowired
-  private RestTemplate restTemplate;
-  @Value("${bpm.server.url}")
-  private  String bpmServerUrl;
-  @Value("${bpm.username}")
-  private String username;
+    @Autowired
+    private RestTemplate restTemplate;
+    @Value("${bpm.server.url}")
+    private  String bpmServerUrl;
+    @Value("${bpm.username}")
+    private String username;
 
-@Value("${bpm.password}")
-private String password;
+    @Value("${bpm.password}")
+    private String password;
+
+
     public ConfigurationWizard(ProcessAppRepository processAppRepository, SnapshotsRepository snapshotsRepository, ServerTypesRepository serverTypesRepository, ServerConfigRepository serverConfigRepository) {
         this.processAppRepository = processAppRepository;
         this.snapshotsRepository= snapshotsRepository;
         this.serverTypesRepository = serverTypesRepository;
         this.serverConfigRepository = serverConfigRepository;
     }
+
+
     @Transactional("archivingTransactionManager")
     public Optional<ServerTypesEntity> getServerType(String serverCode){
 
@@ -61,20 +65,33 @@ private String password;
     public String getStringConnection(String serverCode){
         String connectionURL = "";
         String protocol="";
-        Optional<ArchivingServersEntity> archivingServersEntity =  serverConfigRepository.findByServerCode(serverCode);
-        if (archivingServersEntity.get().getUseSecureConnection()==1){
+        List<ArchivingServersEntity> archivingServersEntity =  serverConfigRepository.findByServerCode(serverCode);
+        if (archivingServersEntity.get(1).getUseSecureConnection()==1){
             protocol ="https://";
         }else{
             protocol ="http://";
         }
-        connectionURL=protocol+archivingServersEntity.get().getServerHostName()+":"
-                +archivingServersEntity.get().getServerPort()+"/";
+        connectionURL=protocol+archivingServersEntity.get(1).getServerHostName()+":"
+                +archivingServersEntity.get(1).getServerPort()+"/";
 
         System.out.println("Connection String "+ connectionURL);
         return connectionURL;
     }
+
+    @Transactional("archivingTransactionManager")
+    public ArchivingServersEntity getCredintials(String serverCode){
+
+        ArchivingServersEntity archivingServersEntity =  serverConfigRepository.findByServerCode(serverCode).get(1);
+
+        return archivingServersEntity;
+    }
+
     public ProcessAppsData getProcesses() {
         String bpmApiUrl = getStringConnection("01_BAW") +"/rest/bpm/wle/v1/processApps";
+        System.out.println("Connection Done");
+
+        ArchivingServersEntity creditials;
+        creditials = getCredintials("01_BAW");
 //        List<InstalledSnapshots> installedSnapshots= new ArrayList<>();
         ProcessAppsData processAppsLists;
 
@@ -83,7 +100,7 @@ private String password;
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         // Set authentication if needed (Basic Auth example)
-        headers.setBasicAuth(username, password);
+        headers.setBasicAuth(creditials.getUserName(), creditials.getUserPassword());
         HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
 
         ResponseEntity<Result<ProcessAppsData>> response = restTemplate.exchange(
@@ -113,7 +130,12 @@ private String password;
     }
 
     public List<InstalledSnapshots> getInstalledSnapshots(String processID) {
-        String bpmApiUrl = bpmServerUrl +"/rest/bpm/wle/v1/processApps";
+
+        String bpmApiUrl = getStringConnection("01_BAW") +"/rest/bpm/wle/v1/processApps";
+        System.out.println("Connection Done");
+
+        ArchivingServersEntity creditials;
+        creditials = getCredintials("01_BAW");
 //        List<InstalledSnapshots> installedSnapshots= new ArrayList<>();
         List<InstalledSnapshots> installedSnapshots;
 
@@ -122,7 +144,7 @@ private String password;
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         // Set authentication if needed (Basic Auth example)
-        headers.setBasicAuth(username, password);
+        headers.setBasicAuth(creditials.getUserName(), creditials.getUserPassword());
         HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
 
         ResponseEntity<Result<ProcessAppsSnpashots>> response = restTemplate.exchange(

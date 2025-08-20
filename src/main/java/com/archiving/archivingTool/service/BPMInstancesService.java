@@ -7,12 +7,15 @@ import com.archiving.archivingTool.dto.bpm.Result;
 import com.archiving.archivingTool.client.BPMInstances;
 import com.archiving.archivingTool.model.DeleteSnapshotDetails;
 import com.archiving.archivingTool.model.Instances;
+import com.archiving.archivingTool.model.Processes;
 import com.archiving.archivingTool.model.TerminatedInstanceDetails;
 import lombok.RequiredArgsConstructor;
 //import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.*;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,8 +24,8 @@ public class BPMInstancesService {
     @Autowired
     BPMInstances bpmInstances;
 
-    public void getAllInstancesBySnapshotID(String username, String password, ProcessSnapshotDTO processSnapshotDTO) {
-        bpmInstances.getAllInstancesBySnapshotID(username, password, processSnapshotDTO);
+    public Instances getAllInstancesBySnapshotID(ProcessSnapshotDTO processSnapshotDTO) {
+        return bpmInstances.getAllInstancesBySnapshotID(processSnapshotDTO);
     }
 
     public void getInstancesBySnapshotIDAndStatus(String snapshotID, String status) {
@@ -47,4 +50,7 @@ public class BPMInstancesService {
         return  bpmInstances.getInstancesObject(instancesIDs);
     }
 
+    public ResponseEntity<String> instancesConfiguration(List<Processes> instances) {
+        return bpmInstances.instancesConfiguration(instances);
+    }
 }

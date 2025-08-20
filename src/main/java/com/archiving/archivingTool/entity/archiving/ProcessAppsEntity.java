@@ -32,7 +32,7 @@ public class ProcessAppsEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "processApps")
     private List<SnapshotsEntity> snapshots;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "processAppsI")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "processAppsID")
     private List<InstancesEntity> instances;
 
     @ManyToMany
