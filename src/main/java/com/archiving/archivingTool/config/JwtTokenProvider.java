@@ -1,7 +1,9 @@
 package com.archiving.archivingTool.config;
 
+import com.archiving.archivingTool.mapper.UserPrincipalConverter;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,12 +21,22 @@ public class JwtTokenProvider {
 
     @Value("${app.jwt.expiration}")
     private long jwtExpirationMs;
+    @Autowired
+    private UserPrincipalConverter userPrincipalConverter;
 
     public String generateToken(Authentication authentication) {
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        UserPrincipal userPrincipal = userPrincipalConverter.convertFromAuthentication(authentication);
 
         List<String> roles = userPrincipal.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
+                .map(authority -> {
+                    // Remove ALL "ROLE_" prefixes to avoid duplication
+                    String cleanAuthority = authority;
+                    while (cleanAuthority.startsWith("ROLE_")) {
+                        cleanAuthority = cleanAuthority.substring(5);
+                    }
+                    return cleanAuthority;
+                })
                 .collect(Collectors.toList());
 
         return Jwts.builder()
@@ -52,5 +64,18 @@ public class JwtTokenProvider {
         } catch (Exception e) {
             return false;
         }
+    }
+    public List<String> getRolesFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(jwtSecret)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        // Extract roles from the claims
+        @SuppressWarnings("unchecked")
+        List<String> roles = (List<String>) claims.get("roles");
+
+        return roles != null ? roles : List.of();
     }
 }

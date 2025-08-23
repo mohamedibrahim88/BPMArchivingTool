@@ -12,6 +12,7 @@ import org.springframework.security.ldap.authentication.ad.ActiveDirectoryLdapAu
 import org.springframework.security.ldap.userdetails.DefaultLdapAuthoritiesPopulator;
 import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -79,7 +80,8 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http,
                                             JwtTokenProvider tokenProvider,
-                                            CustomUserDetailsService userDetailsService) throws Exception {
+                                            CustomUserDetailsService userDetailsService,
+                                            SuperAdminFilter superAdminFilter) throws Exception {
 
         http
                 .cors(withDefaults())
@@ -92,12 +94,14 @@ public class SecurityConfig {
                                 "/webjars/**",
                                 "/swagger-resources/**")
                         .permitAll()  // Allow public access to auth endpoints
-                        .requestMatchers("/api/super-admin/**").hasRole("SUPER_ADMIN")
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        // Use custom access decision for super-admin endpoints
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider, userDetailsService),
-                        UsernamePasswordAuthenticationFilter.class);
+                // JwtAuthenticationFilter runs FIRST to set up authentication
+                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider, userDetailsService), UsernamePasswordAuthenticationFilter.class)
+                // SuperAdminFilter runs SECOND to check roles (after authentication is set)
+                .addFilterAfter(superAdminFilter, JwtAuthenticationFilter.class);
+
 
         return http.build();
     }

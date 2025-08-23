@@ -12,10 +12,12 @@ import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.stereotype.Service;
 
 import javax.naming.Name;
+import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LdapService {
@@ -121,18 +123,24 @@ public class LdapService {
     }
 
     public List<User> getUsersInGroup(String groupName) {
-        // First get the group to find member DNs
+        // First get all member DNs from the group
         List<String> memberDns = ldapTemplate.search(
-                props.getGroupsBase(),
-                "(&(objectclass=groupOfNames)(cn=" + groupName + "))",
-                (AttributesMapper<String>) attributes -> {
-                    Attribute memberAttr = attributes.get("member");
-                    if (memberAttr != null) {
-                        return memberAttr.get().toString();
-                    }
-                    return null;
-                }
-        );
+                        props.getGroupsBase(),
+                        "(&(objectclass=groupOfNames)(cn=" + groupName + "))",
+                        (AttributesMapper<List<String>>) attributes -> {
+                            List<String> members = new ArrayList<>();
+                            Attribute memberAttr = attributes.get("member");
+                            if (memberAttr != null) {
+                                NamingEnumeration<?> enumeration = memberAttr.getAll();
+                                while (enumeration.hasMore()) {
+                                    members.add(enumeration.next().toString());
+                                }
+                            }
+                            return members;
+                        }
+                ).stream()
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
 
         List<User> users = new ArrayList<>();
         for (String memberDn : memberDns) {
@@ -142,6 +150,7 @@ public class LdapService {
                 try {
                     users.add(getUser(username));
                 } catch (Exception e) {
+                    System.err.println("User not found: " + username + ", DN: " + memberDn);
                     // Skip if user not found
                 }
             }
@@ -150,20 +159,37 @@ public class LdapService {
     }
 
     public void addUserToGroup(String username, String groupName) {
-        Name groupDn = LdapNameBuilder.newInstance(props.getGroupsBase())
-                .add("cn", groupName)
-                .build();
+        try {
+            Name groupDn = LdapNameBuilder.newInstance(props.getGroupsBase())
+                    .add("cn", groupName)
+                    .build();
 
-        Name userDn = LdapNameBuilder.newInstance(props.getUsersBase())
-                .add("uid", username)
-                .build();
+            // Search for the user to get their actual DN
+            List<String> userDns = ldapTemplate.search(
+                    props.getUsersBase(),
+                    "(&(objectclass=inetOrgPerson)(uid=" + username + "))",
+                    (AttributesMapper<String>) attributes -> {
+                        // This approach doesn't give us the DN directly
+                        return null;
+                    }
+            );
 
-        ModificationItem[] mods = new ModificationItem[]{
-                new ModificationItem(DirContext.ADD_ATTRIBUTE,
-                        new BasicAttribute("member", userDn.toString()))
-        };
+            // Build the DN properly
+            String userDn = "uid=" + username + "," + props.getUsersBase();
+            if (!userDn.endsWith(props.getBase())) {
+                userDn = userDn + "," + props.getBase();
+            }
 
-        ldapTemplate.modifyAttributes(groupDn, mods);
+            ModificationItem[] mods = new ModificationItem[]{
+                    new ModificationItem(DirContext.ADD_ATTRIBUTE,
+                            new BasicAttribute("member", userDn))
+            };
+
+            ldapTemplate.modifyAttributes(groupDn, mods);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to add user to group: " + e.getMessage(), e);
+        }
     }
 
     public void removeUserFromGroup(String username, String groupName) {
@@ -171,8 +197,10 @@ public class LdapService {
                 .add("cn", groupName)
                 .build();
 
-        Name userDn = LdapNameBuilder.newInstance(props.getUsersBase())
-                .add("uid", username)
+        // Build the complete user DN including the base
+        Name userDn = LdapNameBuilder.newInstance(props.getBase()) // Start with base DN
+                .add(props.getUsersBase().split(",")[0]) // Add ou=users
+                .add("uid", username) // Add uid=username
                 .build();
 
         ModificationItem[] mods = new ModificationItem[]{
