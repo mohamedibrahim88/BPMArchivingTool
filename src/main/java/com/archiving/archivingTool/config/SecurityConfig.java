@@ -7,6 +7,9 @@ import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.security.ldap.authentication.ad.ActiveDirectoryLdapAuthenticationProvider;
 import org.springframework.security.ldap.userdetails.DefaultLdapAuthoritiesPopulator;
@@ -62,9 +65,6 @@ public class SecurityConfig {
                                                        LdapAuthoritiesPopulator authoritiesPopulator,
                                                        AppLdapProps props) throws Exception {
 
-        var authorityMapper = new SimpleAuthorityMapper();
-        authorityMapper.setPrefix("ROLE_");
-        authorityMapper.setConvertToUpperCase(true);
 
         AuthenticationManagerBuilder authBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
 
@@ -72,9 +72,22 @@ public class SecurityConfig {
                 .userDnPatterns("uid={0}," + props.getUsersBase())
                 .contextSource(contextSource)
                 .ldapAuthoritiesPopulator(authoritiesPopulator)
-                .authoritiesMapper(authorityMapper);
+                .authoritiesMapper(customAuthoritiesMapper());
 
         return authBuilder.build();
+    }
+
+    @Bean
+    public GrantedAuthoritiesMapper customAuthoritiesMapper() {
+        return authorities -> authorities.stream()
+                .map(granted -> {
+                    String role = granted.getAuthority();
+                    if (role.startsWith("ROLE_")) {
+                        role = role.substring(5); // remove ROLE_
+                    }
+                    return new SimpleGrantedAuthority(role);
+                })
+                .toList();
     }
 
     @Bean

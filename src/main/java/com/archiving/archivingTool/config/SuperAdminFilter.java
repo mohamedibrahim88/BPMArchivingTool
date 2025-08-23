@@ -1,6 +1,6 @@
 package com.archiving.archivingTool.config;
 
-import com.archiving.archivingTool.model.SystemGroup;
+import com.archiving.archivingTool.model.SystemRole;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +27,7 @@ public class SuperAdminFilter extends OncePerRequestFilter {
             }
 
             boolean hasSuperAdminRole = authentication.getAuthorities().stream()
-                    .anyMatch(auth -> auth.getAuthority().equals(SystemGroup.ROLE_SUPER_ADMIN.getValue()));
+                    .anyMatch(auth -> auth.getAuthority().equals(SystemRole.SUPER_ADMIN.getValue()));
 
             if (!hasSuperAdminRole) {
                 response.setStatus(HttpStatus.FORBIDDEN.value());

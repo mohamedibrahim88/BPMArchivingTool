@@ -1,11 +1,11 @@
 package com.archiving.archivingTool.model;
 
-public enum SystemGroup {
-    ROLE_SUPER_ADMIN("ROLE_SUPER_ADMIN");
+public enum SystemRole {
+    SUPER_ADMIN("SUPER_ADMIN");
 
     private final String value;
 
-    SystemGroup(String value) {
+    SystemRole(String value) {
         this.value = value;
     }
 
@@ -14,8 +14,8 @@ public enum SystemGroup {
     }
 
     // Optional: convert string to enum safely
-    public static SystemGroup fromValue(String value) {
-        for (SystemGroup group : SystemGroup.values()) {
+    public static SystemRole fromValue(String value) {
+        for (SystemRole group : SystemRole.values()) {
             if (group.value.equalsIgnoreCase(value)) {
                 return group;
             }
