@@ -9,7 +9,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ProcessDetails {
+public class BulkInstanceDetails {
 
-    String data;
+    List<ProcessDetails> processDetails;
+
 }

@@ -38,6 +38,6 @@ public class SnapshotsEntity {
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "snapshots")
    private List<TasksEntity> tasks;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "snapshotsI")
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "snapshotI")
     private List<InstancesEntity>instances;
 }
