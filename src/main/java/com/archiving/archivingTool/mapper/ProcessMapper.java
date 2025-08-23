@@ -17,8 +17,11 @@ public interface ProcessMapper {
 
     @Mapping(source = "appID", target = "appID")
     @Mapping(source = "acronym", target = "acronym")
+    @Mapping(source = "name", target = "name")
     @Mapping(source = "retentionStartDate", target = "retentionStartDate")
     @Mapping(source = "configured", target = "configured")
+    @Mapping(source = "numberPeriodArch", target = "numberPeriodArch")
+    @Mapping(source = "instanceArchNumber", target = "instanceArchNumber")
     ProcessAppsEntity fromProcessAppDtoToEntity(ProcessConfigDto processConfigDto);
 
 //    private  Long ID;

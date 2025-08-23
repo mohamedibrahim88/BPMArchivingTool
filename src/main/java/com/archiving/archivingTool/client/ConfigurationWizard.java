@@ -1,20 +1,16 @@
 package com.archiving.archivingTool.client;
 
 import com.archiving.archivingTool.dto.archiving.ArchivingServerDTO;
+import com.archiving.archivingTool.dto.archiving.ProcessAppGourpsUpdateDto;
 import com.archiving.archivingTool.dto.archiving.ProcessConfigDto;
 import com.archiving.archivingTool.dto.archiving.SnapshotDto;
 import com.archiving.archivingTool.dto.bpm.Result;
-import com.archiving.archivingTool.entity.archiving.ArchivingServersEntity;
-import com.archiving.archivingTool.entity.archiving.ProcessAppsEntity;
-import com.archiving.archivingTool.entity.archiving.ServerTypesEntity;
-import com.archiving.archivingTool.entity.archiving.SnapshotsEntity;
+import com.archiving.archivingTool.entity.archiving.*;
+import com.archiving.archivingTool.mapper.ProcessGroupsMapper;
 import com.archiving.archivingTool.mapper.ProcessMapper;
 import com.archiving.archivingTool.mapper.SnapshotMapper;
 import com.archiving.archivingTool.model.*;
-import com.archiving.archivingTool.repository.archiving.ProcessAppRepository;
-import com.archiving.archivingTool.repository.archiving.ServerConfigRepository;
-import com.archiving.archivingTool.repository.archiving.ServerTypesRepository;
-import com.archiving.archivingTool.repository.archiving.SnapshotsRepository;
+import com.archiving.archivingTool.repository.archiving.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -34,6 +30,7 @@ public class ConfigurationWizard {
     private final SnapshotsRepository snapshotsRepository;
     private final ServerTypesRepository serverTypesRepository;
     private final ServerConfigRepository serverConfigRepository;
+    private final ProcessAppGroupsRepository processAppGroupsRepository;
     private PlatformTransactionManager archivingTransactionManager;
   //  private String bpmServerUrl = "https://bpmsrv:9443/";
     @Autowired
@@ -47,11 +44,12 @@ public class ConfigurationWizard {
     private String password;
 
 
-    public ConfigurationWizard(ProcessAppRepository processAppRepository, SnapshotsRepository snapshotsRepository, ServerTypesRepository serverTypesRepository, ServerConfigRepository serverConfigRepository) {
+    public ConfigurationWizard(ProcessAppRepository processAppRepository, SnapshotsRepository snapshotsRepository, ServerTypesRepository serverTypesRepository, ServerConfigRepository serverConfigRepository, ProcessAppGroupsRepository processAppGroupsRepository) {
         this.processAppRepository = processAppRepository;
         this.snapshotsRepository= snapshotsRepository;
         this.serverTypesRepository = serverTypesRepository;
         this.serverConfigRepository = serverConfigRepository;
+        this.processAppGroupsRepository = processAppGroupsRepository;
     }
 
 
@@ -234,8 +232,48 @@ public class ConfigurationWizard {
         processAppRepository.save(processApps);
         processAppRepository.flush();
 
+        List<ProcessAppsGroupsEntity> processAppsGroups = ProcessGroupsMapper.INSTANCE.fromDtoToListEntity(processConfigDto);
+
+        if (processAppsGroups == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to map DTO to ProcessApps entity");
+        }
+
+        System.out.println("Entity: " + processAppsGroups);
+
+        processAppGroupsRepository.saveAll(processAppsGroups);
+        processAppGroupsRepository.flush();
+
         return ResponseEntity.ok("Configured");
     }
+
+    @Transactional("archivingTransactionManager")
+    public ResponseEntity<String> deleteProcessAppGroups(String appID) {
+        processAppGroupsRepository.deleteByAppID(appID);
+        return ResponseEntity.ok("Deleted");
+    }
+
+
+    @Transactional("archivingTransactionManager")
+    public ResponseEntity<String> updateProcessAppGroups(ProcessAppGourpsUpdateDto processAppGourpsUpdateDto) {
+
+        processAppGroupsRepository.deleteByAppID(processAppGourpsUpdateDto.getAppID());
+
+        List<ProcessAppsGroupsEntity> processAppsGroups = ProcessGroupsMapper.INSTANCE.fromProcessAppGroupsUpdateDtoToListEntity(processAppGourpsUpdateDto);
+
+        if (processAppsGroups == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to map DTO to ProcessApps entity");
+        }
+
+        System.out.println("Entity: " + processAppsGroups);
+
+        processAppGroupsRepository.saveAll(processAppsGroups);
+        processAppGroupsRepository.flush();
+        return ResponseEntity.ok("Updated");
+
+    }
+
 
     @Transactional("archivingTransactionManager")
     public ResponseEntity<String> snapshotConfiguration (List<SnapshotDto> snapshotDtoList)
