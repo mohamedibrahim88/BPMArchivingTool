@@ -12,6 +12,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -56,31 +58,10 @@ public class AuthController {
 
         } catch (AuthenticationException e) {
             return ResponseEntity.status(401)
-                    .body("Invalid username or password");
+                    .body(Map.of("message", "Invalid username or password"));
         } catch (Exception e) {
             return ResponseEntity.status(500)
-                    .body( "Internal server error");
+                    .body( Map.of("message","Internal server error"));
         }
     }
-
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody UserRequest registrationRequest) {
-        try {
-            // Check if user already exists
-            if (ldapService.userExists(registrationRequest.getUsername())) {
-                return ResponseEntity.badRequest()
-                        .body("Username already exists");
-            }
-
-            // Create user in LDAP
-            ldapService.createUser(registrationRequest);
-
-            return ResponseEntity.ok("User registered successfully");
-
-        } catch (Exception e) {
-            return ResponseEntity.badRequest()
-                    .body("Error in server Side");
-        }
-    }
-
 }
