@@ -59,6 +59,11 @@ public class ConfigurationWizardController {
         return configurationWizardService.updateProcessAppGroups(processAppGourpsUpdateDto);
     }
 
+    @GetMapping("config/process")
+    public ProcessConfigDto getProcessAppConfig(@RequestParam String appID) {
+        return configurationWizardService.getProcessAppConfig(appID);
+    }
+
     @PostMapping("config/snapshots")
     public ResponseEntity<String> snapshotConfiguration(@RequestBody List<SnapshotDto> snapshotDtoList)
     {

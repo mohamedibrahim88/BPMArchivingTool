@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ProcessAppGroupsRepository extends JpaRepository<ProcessAppsGroupsEntity,Long > {
@@ -17,4 +18,7 @@ public interface ProcessAppGroupsRepository extends JpaRepository<ProcessAppsGro
     @Transactional
     @Query("DELETE FROM ProcessAppsGroupsEntity s WHERE s.appID = :appID")
     void deleteByAppID(@Param("appID") String appID);
+
+    @Query("SELECT s FROM ProcessAppsGroupsEntity s WHERE s.appID = :appID")
+    List<ProcessAppsGroupsEntity> getByAppID(@Param("appID") String appID);
 }

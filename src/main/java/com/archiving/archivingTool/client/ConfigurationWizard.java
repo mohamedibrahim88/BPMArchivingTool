@@ -274,6 +274,38 @@ public class ConfigurationWizard {
 
     }
 
+    @Transactional("archivingTransactionManager")
+    public ProcessConfigDto getProcessAppConfig(String appID) {
+
+        ProcessAppsEntity processAppsEntity =  processAppRepository.getByAppID(appID).getFirst();
+        List<ProcessAppsGroupsEntity> processAppsGroupsEntityList = processAppGroupsRepository.getByAppID(appID);
+
+        ProcessConfigDto processConfigDto = ProcessMapper.INSTANCE.fromProcessAppEntityToDto(processAppsEntity);
+//        if (processConfigDto == null) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body("Failed to map DTO to ProcessApps entity");
+//        }
+        System.out.println(processConfigDto);
+        List<String> groupNames = new ArrayList<>();
+        List<String> userNames = new ArrayList<>();
+        for (ProcessAppsGroupsEntity processAppsGroupsEntity : processAppsGroupsEntityList){
+            if (processAppsGroupsEntity.getGroupName() != null) {
+                groupNames.add(processAppsGroupsEntity.getGroupName());
+            }
+            if (processAppsGroupsEntity.getUserName() != null) {
+                userNames.add(processAppsGroupsEntity.getUserName());
+            }
+        }
+
+        processConfigDto.setAssignedUsers(userNames);
+        processConfigDto.setAssignedGroups(groupNames);
+
+        System.out.println("Entity: " + processConfigDto);
+
+
+        return processConfigDto;
+    }
+
 
     @Transactional("archivingTransactionManager")
     public ResponseEntity<String> snapshotConfiguration (List<SnapshotDto> snapshotDtoList)
