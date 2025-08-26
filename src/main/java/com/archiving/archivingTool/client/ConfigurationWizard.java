@@ -79,7 +79,7 @@ public class ConfigurationWizard {
     @Transactional("archivingTransactionManager")
     public ArchivingServersEntity getCredintials(String serverCode){
 
-        ArchivingServersEntity archivingServersEntity =  serverConfigRepository.findByServerCode(serverCode).get(1);
+        ArchivingServersEntity archivingServersEntity =  serverConfigRepository.findByServerCode(serverCode).getFirst();
 
         return archivingServersEntity;
     }
