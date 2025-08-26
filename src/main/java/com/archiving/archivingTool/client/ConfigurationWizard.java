@@ -64,13 +64,13 @@ public class ConfigurationWizard {
         String connectionURL = "";
         String protocol="";
         List<ArchivingServersEntity> archivingServersEntity =  serverConfigRepository.findByServerCode(serverCode);
-        if (archivingServersEntity.get(1).getUseSecureConnection()==1){
+        if (archivingServersEntity.getFirst().getUseSecureConnection()==1){
             protocol ="https://";
         }else{
             protocol ="http://";
         }
-        connectionURL=protocol+archivingServersEntity.get(1).getServerHostName()+":"
-                +archivingServersEntity.get(1).getServerPort()+"/";
+        connectionURL=protocol+archivingServersEntity.getFirst().getServerHostName()+":"
+                +archivingServersEntity.getFirst().getServerPort()+"/";
 
         System.out.println("Connection String "+ connectionURL);
         return connectionURL;
@@ -85,7 +85,8 @@ public class ConfigurationWizard {
     }
 
     public ProcessAppsData getProcesses() {
-        String bpmApiUrl = getStringConnection("01_BAW") +"/rest/bpm/wle/v1/processApps";
+
+        String bpmApiUrl = getStringConnection("01_BAW") + "/rest/bpm/wle/v1/processApps";
         System.out.println("Connection Done");
 
         ArchivingServersEntity creditials;
@@ -122,6 +123,18 @@ public class ConfigurationWizard {
         processAppsLists= result.getData();
 //        processAppsLists = null;
         System.out.println("Result " +result.getData());
+
+        for (ProcessAppsList processAppsData : processAppsLists.getProcessAppsList()){
+
+            List<ProcessAppsEntity> processAppsEntity = processAppRepository.getByAppID(processAppsData.getAppID());
+            if (processAppsEntity.isEmpty()){
+                processAppsData.setConfigured(false);
+            } else if (processAppsEntity.getFirst().isConfigured()) {
+                processAppsData.setConfigured(true);
+            }else {
+                processAppsData.setConfigured(false);
+            }
+        }
 
        // System.out.println(installedSnapshots);
         return processAppsLists;
