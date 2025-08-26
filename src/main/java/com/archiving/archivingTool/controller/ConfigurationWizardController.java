@@ -27,7 +27,9 @@ public class ConfigurationWizardController {
     }
 
     @GetMapping("/processes")
-    public ProcessAppsData getProcesses(){
+    public ProcessAppsData getProcesses(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int pageSize) {
         assert configurationWizardService != null;
        return configurationWizardService.getGetBPMProcesses();
     }
