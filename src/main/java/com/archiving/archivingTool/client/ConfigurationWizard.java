@@ -275,16 +275,27 @@ public class ConfigurationWizard {
     }
 
     @Transactional("archivingTransactionManager")
-    public ProcessConfigDto getProcessAppConfig(String appID) {
+    public ResponseEntity<ProcessConfigDto> getProcessAppConfig(String appID) {
 
-        ProcessAppsEntity processAppsEntity =  processAppRepository.getByAppID(appID).getFirst();
+
+        ProcessConfigDto processConfigDto = new ProcessConfigDto();
+
+        List<ProcessAppsEntity> processAppsEntity =  processAppRepository.getByAppID(appID);
+
+        if (processAppsEntity.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(processConfigDto);
+        }
+
         List<ProcessAppsGroupsEntity> processAppsGroupsEntityList = processAppGroupsRepository.getByAppID(appID);
 
-        ProcessConfigDto processConfigDto = ProcessMapper.INSTANCE.fromProcessAppEntityToDto(processAppsEntity);
-//        if (processConfigDto == null) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body("Failed to map DTO to ProcessApps entity");
-//        }
+        processConfigDto = ProcessMapper.INSTANCE.fromProcessAppEntityToDto(processAppsEntity.getFirst());
+
+        if (processConfigDto == null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(processConfigDto);
+        }
+
         System.out.println(processConfigDto);
         List<String> groupNames = new ArrayList<>();
         List<String> userNames = new ArrayList<>();
@@ -303,7 +314,7 @@ public class ConfigurationWizard {
         System.out.println("Entity: " + processConfigDto);
 
 
-        return processConfigDto;
+        return ResponseEntity.ok(processConfigDto);
     }
 
 

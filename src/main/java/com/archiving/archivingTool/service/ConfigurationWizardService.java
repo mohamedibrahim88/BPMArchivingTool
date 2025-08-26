@@ -43,7 +43,7 @@ public class ConfigurationWizardService {
         return configurationWizard.updateProcessAppGroups(processAppGourpsUpdateDto);
     }
 
-    public ProcessConfigDto getProcessAppConfig(String appID) {
+    public ResponseEntity<ProcessConfigDto> getProcessAppConfig(String appID) {
         return configurationWizard.getProcessAppConfig(appID);
     }
 

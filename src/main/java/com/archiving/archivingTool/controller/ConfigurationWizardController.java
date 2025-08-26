@@ -62,7 +62,7 @@ public class ConfigurationWizardController {
     }
 
     @GetMapping("config/process")
-    public ProcessConfigDto getProcessAppConfig(@RequestParam String appID) {
+    public ResponseEntity<ProcessConfigDto> getProcessAppConfig(@RequestParam String appID) {
         return configurationWizardService.getProcessAppConfig(appID);
     }
 
