@@ -16,7 +16,8 @@ import java.util.List;
 @Table(name="ProcessApps")
 public class ProcessAppsEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "my_seq")
+    @SequenceGenerator(name = "my_seq", sequenceName = "my_sequence", allocationSize = 1)
     private  Long ID;
     @Column(name="app_id")
     private  String appID;
@@ -26,6 +27,10 @@ public class ProcessAppsEntity {
     private  String name;
     @Column(name="retention_start_date")
     private  String retentionStartDate;
+    @Column(name="ARCHIVING_PERIOD_NUMBER")
+    private  String numberPeriodArch;
+    @Column(name="INSTANCE_ARCHIVING_NUMBER")
+    private  String instanceArchNumber;
     @Column(name="is_configured")
     private boolean isConfigured;
 
@@ -35,9 +40,9 @@ public class ProcessAppsEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "processAppsID")
     private List<InstancesEntity> instances;
 
-    @ManyToMany
-    @JoinTable(name = "ProcessApps_Groups",
-    joinColumns = @JoinColumn(name = "processApp_id"),
-            inverseJoinColumns = @JoinColumn(name = "group_id"))
-    private List<GroupsEntity> groups;
+//    @ManyToMany
+//    @JoinTable(name = "ProcessApps_Groups",
+//    joinColumns = @JoinColumn(name = "processApp_id"),
+//            inverseJoinColumns = @JoinColumn(name = "group_id"))
+//    private List<GroupsEntity> groups;
 }

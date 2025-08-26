@@ -22,6 +22,6 @@ public class GroupsEntity {
     @Column(name="group_name")
     private String groupName;
 
-    @ManyToMany(mappedBy = "groups")
-    private List<ProcessAppsEntity> processApps;
+//    @ManyToMany(mappedBy = "groups")
+//    private List<ProcessAppsEntity> processApps;
 }

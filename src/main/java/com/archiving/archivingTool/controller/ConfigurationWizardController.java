@@ -1,5 +1,6 @@
 package com.archiving.archivingTool.controller;
 
+import com.archiving.archivingTool.dto.archiving.ProcessAppGourpsUpdateDto;
 import com.archiving.archivingTool.dto.archiving.ProcessConfigDto;
 import com.archiving.archivingTool.dto.archiving.SnapshotDto;
 import com.archiving.archivingTool.model.ExposedProcesses;
@@ -46,6 +47,21 @@ public class ConfigurationWizardController {
     public ResponseEntity<String> configProcess(@RequestBody ProcessConfigDto processConfigDto) {
 
         return configurationWizardService.processConfiguration(processConfigDto);
+    }
+
+    @DeleteMapping("config/process")
+    public ResponseEntity<String> deleteProcessAppGroups(@RequestParam String appID) {
+       return configurationWizardService.deleteProcessAppGroups(appID);
+    }
+
+    @PutMapping("config/process")
+    public ResponseEntity<String> updateProcessAppGroups(@RequestBody ProcessAppGourpsUpdateDto processAppGourpsUpdateDto) {
+        return configurationWizardService.updateProcessAppGroups(processAppGourpsUpdateDto);
+    }
+
+    @GetMapping("config/process")
+    public ProcessConfigDto getProcessAppConfig(@RequestParam String appID) {
+        return configurationWizardService.getProcessAppConfig(appID);
     }
 
     @PostMapping("config/snapshots")

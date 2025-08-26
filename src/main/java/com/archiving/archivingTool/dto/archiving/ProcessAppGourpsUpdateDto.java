@@ -9,15 +9,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ProcessConfigDto {
+public class ProcessAppGourpsUpdateDto {
   private String appID;
-  private String acronym;
-  private String name;
-  private String retentionStartDate;
-  private String numberPeriodArch;
-  private String instanceArchNumber;
   private List<String> assignedGroups;
   private List<String> assignedUsers;
-  @JsonProperty("isConfigured")
-  private boolean isConfigured;
+
 }

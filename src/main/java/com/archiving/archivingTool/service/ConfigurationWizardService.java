@@ -1,6 +1,7 @@
 package com.archiving.archivingTool.service;
 
 import com.archiving.archivingTool.client.ConfigurationWizard;
+import com.archiving.archivingTool.dto.archiving.ProcessAppGourpsUpdateDto;
 import com.archiving.archivingTool.dto.archiving.ProcessConfigDto;
 import com.archiving.archivingTool.dto.archiving.SnapshotDto;
 import com.archiving.archivingTool.model.*;
@@ -32,6 +33,18 @@ public class ConfigurationWizardService {
 
     public ResponseEntity<String> processConfiguration(ProcessConfigDto processConfigDto) {
         return configurationWizard.processConfiguration(processConfigDto);
+    }
+
+    public ResponseEntity<String> deleteProcessAppGroups(String appID) {
+        return configurationWizard.deleteProcessAppGroups(appID);
+    }
+
+    public ResponseEntity<String> updateProcessAppGroups(ProcessAppGourpsUpdateDto processAppGourpsUpdateDto) {
+        return configurationWizard.updateProcessAppGroups(processAppGourpsUpdateDto);
+    }
+
+    public ProcessConfigDto getProcessAppConfig(String appID) {
+        return configurationWizard.getProcessAppConfig(appID);
     }
 
     public ResponseEntity<String> snapshotConfiguration(List<SnapshotDto> snapshotDtoList)
