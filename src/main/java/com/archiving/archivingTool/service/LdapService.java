@@ -6,16 +6,22 @@ import com.archiving.archivingTool.dto.User;
 import com.archiving.archivingTool.dto.UserRequest;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.support.LdapNameBuilder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import javax.naming.ldap.LdapName;
 import javax.naming.Name;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.*;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,13 +30,14 @@ public class LdapService {
 
     private final LdapTemplate ldapTemplate;
     private final AppLdapProps props;
+    private final PasswordEncoder passwordEncoder;
 
-    public LdapService(LdapTemplate ldapTemplate, AppLdapProps props) {
+    public LdapService(LdapTemplate ldapTemplate, AppLdapProps props, PasswordEncoder passwordEncoder) {
         this.ldapTemplate = ldapTemplate;
         this.props = props;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    // User operations
     public void createUser(UserRequest request) throws Exception {
         Name userDn = LdapNameBuilder.newInstance(props.getUsersBase())
                 .add("uid", request.getUsername())
@@ -43,10 +50,10 @@ public class LdapService {
         context.setAttributeValue("sn", request.getLastName());
         context.setAttributeValue("givenName", request.getFirstName());
         context.setAttributeValue("mail", request.getEmail());
-        context.setAttributeValue("userPassword", "{SHA}" + java.util.Base64.getEncoder()
-                .encodeToString(java.security.MessageDigest.getInstance("SHA-1")
-                        .digest(request.getPassword().getBytes())));
         context.setAttributeValue("uid", request.getUsername());
+
+        // Let LDAP handle the password encoding
+        context.setAttributeValue("userPassword", request.getPassword());
 
         ldapTemplate.bind(context);
     }
@@ -276,6 +283,79 @@ public class LdapService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public boolean isUserInGroup(String username, String groupName) {
+        try {
+            // First, check if group exists
+            if (!groupExists(groupName)) {
+                return false;
+            }
+
+            // Build group DN
+            LdapName groupDn = LdapNameBuilder.newInstance()
+                    .add(props.getGroupsBase())
+                    .add("cn", groupName)
+                    .build();
+
+            // Get the group entry
+            DirContextOperations groupContext = ldapTemplate.lookupContext(groupDn);
+
+            // Get the member attribute values
+            Attribute memberAttribute = groupContext.getAttributes().get("member");
+            if (memberAttribute == null) {
+                return false;
+            }
+
+            // Build user DN to check against
+            LdapName userDn = LdapNameBuilder.newInstance()
+                    .add(props.getUsersBase())
+                    .add("uid", username)
+                    .build();
+
+            String userDnString = userDn.toString();
+
+            // Check if user DN is in the member list
+            for (int i = 0; i < memberAttribute.size(); i++) {
+                String memberDn = (String) memberAttribute.get(i);
+                if (memberDn.toLowerCase().contains(userDnString.toLowerCase())) {
+                    return true;
+                }
+            }
+
+            return false;
+        } catch (Exception e) {
+            throw new RuntimeException("Error checking if user '" + username + "' is in group '" + groupName + "'", e);
+        }
+    }
+
+    public void updateUserPassword(String username, String newPassword) {
+        try {
+            LdapName userDn = LdapNameBuilder.newInstance(props.getUsersBase())
+                    .add("uid", username)
+                    .build();
+
+            // Don't encode, let LDAP handle it
+            ModificationItem[] mods = new ModificationItem[]{
+                    new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
+                            new BasicAttribute("userPassword", newPassword))
+            };
+
+            ldapTemplate.modifyAttributes(userDn, mods);
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating password for user: " + username, e);
+        }
+    }
+
+
+    // Helper method to get user DN
+    private String getUserDn(String username) {
+        return "uid=" + username + ","+ props.getUsersBase() + "," + props.getBase();
+    }
+
+    // Helper method to get group DN
+    private String getGroupDn(String groupName) {
+        return "cn=" + groupName + "," + props.getGroupsBase();
     }
 
 }
