@@ -47,7 +47,7 @@ public class SuperAdminController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<?> createUser(@RequestBody UserRequest request) {
+    public ResponseEntity<String> createUser(@RequestBody UserRequest request) {
         try {
             // Check if user already exists
             if (ldapService.userExists(request.getUsername())) {
@@ -63,7 +63,7 @@ public class SuperAdminController {
     }
 
     @PutMapping("/users/{username}/password")
-    public ResponseEntity<?> updateUserPassword(@PathVariable String username,
+    public ResponseEntity<String> updateUserPassword(@PathVariable String username,
                                                 @RequestBody String newPassword) {
         try {
             // Check if user exists
@@ -79,7 +79,7 @@ public class SuperAdminController {
     }
 
     @DeleteMapping("/users/{username}")
-    public ResponseEntity<?> deleteUser(@PathVariable String username) {
+    public ResponseEntity<String> deleteUser(@PathVariable String username) {
         try {
             // Check if user exists
             if (!ldapService.userExists(username)) {
@@ -121,7 +121,7 @@ public class SuperAdminController {
     }
 
     @PostMapping("/groups")
-    public ResponseEntity<?> createGroup(@RequestBody CreateGroupRequest request) {
+    public ResponseEntity<String> createGroup(@RequestBody CreateGroupRequest request) {
         try {
             // Check if group already exists
             if (ldapService.groupExists(request.getGroupName())) {
@@ -137,7 +137,7 @@ public class SuperAdminController {
     }
 
     @DeleteMapping("/groups/{groupName}")
-    public ResponseEntity<?> deleteGroup(@PathVariable String groupName) {
+    public ResponseEntity<String> deleteGroup(@PathVariable String groupName) {
         try {
             // Check if group exists
             if (!ldapService.groupExists(groupName)) {
@@ -154,7 +154,7 @@ public class SuperAdminController {
     // Group Assignment Endpoints
 
     @PostMapping("/groups/{groupName}/users/{username}")
-    public ResponseEntity<?> assignUserToGroup(@PathVariable String groupName,
+    public ResponseEntity<String> assignUserToGroup(@PathVariable String groupName,
                                                @PathVariable String username) {
         try {
             // Check if user exists
@@ -181,7 +181,7 @@ public class SuperAdminController {
     }
 
     @DeleteMapping("/groups/{groupName}/users/{username}")
-    public ResponseEntity<?> removeUserFromGroup(@PathVariable String groupName,
+    public ResponseEntity<String> removeUserFromGroup(@PathVariable String groupName,
                                                  @PathVariable String username) {
         try {
             // Check if user exists
@@ -206,11 +206,25 @@ public class SuperAdminController {
             return ResponseEntity.badRequest().body("Error removing user from group: " + e.getMessage());
         }
     }
+    @GetMapping("/users/{username}/groups")
+    public ResponseEntity<List<Group>> getGroupsForUser(@PathVariable String username) {
+        try {
+            // Check if user exists
+            if (!ldapService.userExists(username)) {
+                return ResponseEntity.notFound().build();
+            }
+
+            List<Group> groups = ldapService.getGroupsForUser(username);
+            return ResponseEntity.ok(groups);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 
     // Bulk Operations
 
     @PostMapping("/bulk/users")
-    public ResponseEntity<?> createUsers(@RequestBody List<UserRequest> requests) {
+    public ResponseEntity<String> createUsers(@RequestBody List<UserRequest> requests) {
         try {
             StringBuilder results = new StringBuilder();
 
@@ -236,7 +250,7 @@ public class SuperAdminController {
     }
 
     @PostMapping("/bulk/groups")
-    public ResponseEntity<?> createGroups(@RequestBody List<CreateGroupRequest> requests) {
+    public ResponseEntity<String> createGroups(@RequestBody List<CreateGroupRequest> requests) {
         try {
             StringBuilder results = new StringBuilder();
 

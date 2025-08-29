@@ -358,4 +358,23 @@ public class LdapService {
         return "cn=" + groupName + "," + props.getGroupsBase();
     }
 
+    public List<Group> getGroupsForUser(String username) {
+        try {
+            String userDn = "uid=" + username + "," + props.getUsersBase() + "," + props.getBase();
+
+            return ldapTemplate.search(
+                    props.getGroupsBase(),
+                    "(&(objectclass=groupOfNames)(member=" + userDn + "))",
+                    (AttributesMapper<Group>) attributes -> {
+                        return new Group(
+                                getAttributeValue(attributes, "cn"),
+                                getMemberCount(attributes)
+                        );
+                    }
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Error retrieving groups for user: " + username, e);
+        }
+    }
+
 }
