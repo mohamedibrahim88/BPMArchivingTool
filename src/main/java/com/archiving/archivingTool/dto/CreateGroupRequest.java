@@ -1,20 +1,20 @@
 package com.archiving.archivingTool.dto;
 
 public class CreateGroupRequest {
-    private String groupName;
+    private String name;
 
     // Default constructor
     public CreateGroupRequest() {}
 
     public CreateGroupRequest(String groupName) {
-        this.groupName = groupName;
+        this.name = groupName;
     }
 
     public String getGroupName() {
-        return groupName;
+        return name;
     }
 
     public void setGroupName(String groupName) {
-        this.groupName = groupName;
+        this.name = groupName;
     }
 }
