@@ -6,15 +6,15 @@ public class CreateGroupRequest {
     // Default constructor
     public CreateGroupRequest() {}
 
-    public CreateGroupRequest(String groupName) {
-        this.name = groupName;
+    public CreateGroupRequest(String name) {
+        this.name = name;
     }
 
-    public String getGroupName() {
+    public String getName() {
         return name;
     }
 
-    public void setGroupName(String groupName) {
-        this.name = groupName;
+    public void setGroupName(String name) {
+        this.name = name;
     }
 }

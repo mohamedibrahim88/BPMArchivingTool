@@ -4,6 +4,7 @@ import com.archiving.archivingTool.dto.CreateGroupRequest;
 import com.archiving.archivingTool.dto.Group;
 import com.archiving.archivingTool.dto.User;
 import com.archiving.archivingTool.dto.UserRequest;
+import com.archiving.archivingTool.model.SystemRole;
 import com.archiving.archivingTool.service.LdapService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -124,12 +125,12 @@ public class SuperAdminController {
     public ResponseEntity<String> createGroup(@RequestBody CreateGroupRequest request) {
         try {
             // Check if group already exists
-            if (ldapService.groupExists(request.getGroupName())) {
+            if (ldapService.groupExists(request.getName())) {
                 return ResponseEntity.badRequest()
-                        .body("Group '" + request.getGroupName() + "' already exists");
+                        .body("Group '" + request.getName() + "' already exists");
             }
 
-            ldapService.createGroup(request.getGroupName());
+            ldapService.createGroup(request.getName());
             return ResponseEntity.ok().body("Group created successfully");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error creating group: " + e.getMessage());
@@ -142,6 +143,10 @@ public class SuperAdminController {
             // Check if group exists
             if (!ldapService.groupExists(groupName)) {
                 return ResponseEntity.notFound().build();
+            }
+
+            if(SystemRole.SUPER_ADMIN.getValue().equals(groupName)){
+                return ResponseEntity.badRequest().body("Can not delete Super Admin Role");
             }
 
             ldapService.deleteGroup(groupName);
@@ -256,15 +261,15 @@ public class SuperAdminController {
 
             for (CreateGroupRequest request : requests) {
                 try {
-                    if (ldapService.groupExists(request.getGroupName())) {
-                        results.append("Group '").append(request.getGroupName()).append("' already exists. ");
+                    if (ldapService.groupExists(request.getName())) {
+                        results.append("Group '").append(request.getName()).append("' already exists. ");
                         continue;
                     }
 
-                    ldapService.createGroup(request.getGroupName());
-                    results.append("Group '").append(request.getGroupName()).append("' created successfully. ");
+                    ldapService.createGroup(request.getName());
+                    results.append("Group '").append(request.getName()).append("' created successfully. ");
                 } catch (Exception e) {
-                    results.append("Error creating group '").append(request.getGroupName())
+                    results.append("Error creating group '").append(request.getName())
                             .append("': ").append(e.getMessage()).append(". ");
                 }
             }
