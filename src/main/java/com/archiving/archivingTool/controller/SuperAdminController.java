@@ -6,11 +6,13 @@ import com.archiving.archivingTool.dto.User;
 import com.archiving.archivingTool.dto.UserRequest;
 import com.archiving.archivingTool.model.SystemRole;
 import com.archiving.archivingTool.service.LdapService;
+import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api/super-admin")
@@ -18,6 +20,8 @@ import java.util.List;
 public class SuperAdminController {
 
     private final LdapService ldapService;
+    private static final String PASSWORD_PATTERN =
+            "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
 
     public SuperAdminController(LdapService ldapService) {
         this.ldapService = ldapService;
@@ -67,6 +71,15 @@ public class SuperAdminController {
     public ResponseEntity<String> updateUserPassword(@PathVariable String username,
                                                 @RequestBody String newPassword) {
         try {
+            // Manual validation
+            if (newPassword == null || newPassword.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("Password cannot be empty");
+            }
+
+            if (newPassword.length() < 8) {
+                return ResponseEntity.badRequest().body("Password must be at least 8 characters long");
+            }
+
             // Check if user exists
             if (!ldapService.userExists(username)) {
                 return ResponseEntity.notFound().build();
@@ -278,5 +291,12 @@ public class SuperAdminController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error processing bulk group creation: " + e.getMessage());
         }
+    }
+
+    public boolean isValid(String password) {
+        if (password == null) {
+            return false;
+        }
+        return Pattern.matches(PASSWORD_PATTERN, password);
     }
 }
