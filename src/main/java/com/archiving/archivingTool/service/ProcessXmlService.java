@@ -30,10 +30,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
 @Service
@@ -404,40 +401,32 @@ public class ProcessXmlService {
             }
         }
 
-//        InstancesEntity instancesEntity = instancesRepository.getByPiid(instanceID);
-//        System.out.println("instance : " + instancesEntity);
-//        System.out.println(instancesEntity.getJsonObject());
-//        ObjectMapper mapper = new ObjectMapper();
-//        JsonNode root = mapper.readTree(instancesEntity.getJsonObject());
-//        System.out.println("Root : " + root);
-//        result = getBinding(result, root);
+        InstancesEntity instancesEntity = instancesRepository.getByPiid(instanceID);
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode appData = mapper.readTree(instancesEntity.getJsonObject()).get("App");
 
+        for (CoachDefinitionNodeDTO node : result) {
+            replaceBindings(node, appData);
+        }
         return result;
     }
 
 
-//    private List<CoachDefinitionNodeDTO> getBinding(List<CoachDefinitionNodeDTO> coachDefinitionNodeDTOList, JsonNode root){
-//        List<CoachDefinitionNodeDTO> result = coachDefinitionNodeDTOList;
-//        for (CoachDefinitionNodeDTO coachDefinitionNodeDTO : coachDefinitionNodeDTOList){
-//            System.out.println("searching : " + coachDefinitionNodeDTO.getLabel());
-//            JsonNode value = root.get("App").get(coachDefinitionNodeDTO.getLabel().toLowerCase());
-//            System.out.println("json : " + value);
-//            if(value == null){
-//                if (!coachDefinitionNodeDTO.getChildren().isEmpty()){
-//                    System.out.println("recursion : " + coachDefinitionNodeDTO.getChildren());
-//                    getBinding(coachDefinitionNodeDTO.getChildren(), root);
-//                }else {
-//                    result.add(coachDefinitionNodeDTO);
-//                    return result;
-//                }
-//            }else {
-//                System.out.println("Found Label : " + value.asText());
-//                coachDefinitionNodeDTO.setBinding(value.asText());
-//            }
-//            result.add(coachDefinitionNodeDTO);
-//        }
-//        return result;
-//    }
+    private static void replaceBindings(CoachDefinitionNodeDTO node, JsonNode appData) {
+        if (node.getBinding() != null && node.getBinding().startsWith("tw.businessData.App.")) {
+            String field = node.getBinding().substring("tw.businessData.App.".length());
+            if (appData.has(field)) {
+                node.setBinding(appData.get(field).asText());
+            }
+        }
+
+        if (node.getChildren() != null) {
+            for (CoachDefinitionNodeDTO child : node.getChildren()) {
+                replaceBindings(child, appData);
+            }
+        }
+    }
+
 
     private String safeEvaluate(XPath xpath, String expression, Node contextNode) {
         try {
