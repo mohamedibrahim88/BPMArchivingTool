@@ -1,8 +1,10 @@
 package com.archiving.archivingTool.client;
 
 import com.archiving.archivingTool.dto.bpm.Result;
+import com.archiving.archivingTool.entity.archiving.ArchivingServersEntity;
 import com.archiving.archivingTool.model.Diagram;
 import com.archiving.archivingTool.model.ExposedItemsDetails;
+import com.archiving.archivingTool.model.ExposedProcesses;
 import com.archiving.archivingTool.model.Step;
 //import com.archiving.archivingTool.repository.bpm.TaskViewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,9 @@ import java.util.List;
 @Component
 public class ProcessTasks {
 
-    private String bpmServerUrl = "https://bpmsrv:9443/";
+    @Autowired
+    private ConfigurationWizard configurationWizard;
+
     @Autowired
     private RestTemplate restTemplate;
 //    private final TaskViewRepository taskViewRepository;
@@ -25,16 +29,38 @@ public class ProcessTasks {
 //        this.taskViewRepository = taskViewRepository;
 //    }
 
+    public List<Step> getProcessDiagramTasks (String processAppID, String snapshotID){
+        ExposedProcesses exposedProcesses = configurationWizard.getExposedProcesses(processAppID);
+        List<Step> processTasks = new ArrayList<>();
+        for (ExposedItemsDetails exposedItemsDetails : exposedProcesses.getExposedItemsList()){
+            if (exposedItemsDetails.getSnapshotID().equals(snapshotID)){
+                System.out.println("Process: " + exposedItemsDetails);
+                List<Step> processTaskDetails = getProcessTasks(exposedItemsDetails);
+                for (Step s : processTaskDetails){
+                    if (!s.getExternalID().isBlank()){
+                        System.out.println("Diagram: " + s);
+                        processTasks.add(s);
+                    }else {
+                        continue;
+                    }
+                }
+            }else {
+                continue;
+            }
+        }
+        return processTasks;
+    }
+
     public List<Step> getProcessTasks (ExposedItemsDetails exposedItemsDetails)
     {
         System.out.println( exposedItemsDetails);
-        String bpmApiUrl = bpmServerUrl + "rest/bpm/wle/v1/processModel/"+exposedItemsDetails.getItemID()+"?snapshotId="+exposedItemsDetails.getSnapshotID()+"&branchId="+exposedItemsDetails.getBranchID()+"&processAppId="+exposedItemsDetails.getProcessAppID()+"&parts=diagram";
+        String bpmApiUrl = configurationWizard.getStringConnection("01_BAW") + "rest/bpm/wle/v1/processModel/"+exposedItemsDetails.getItemID()+"?snapshotId="+exposedItemsDetails.getSnapshotID()+"&branchId="+exposedItemsDetails.getBranchID()+"&processAppId="+exposedItemsDetails.getProcessAppID()+"&parts=diagram";
         Result<Diagram> result= new Result<Diagram>();
         List<Step>  steps = new ArrayList<>();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        // Set authentication if needed (Basic Auth example)
-        headers.setBasicAuth("wasadmin", "wasadminP@ssw0rd");
+        ArchivingServersEntity archivingServersEntity = configurationWizard.getCredintials("01_BAW");
+        headers.setBasicAuth(archivingServersEntity.getUserName(), archivingServersEntity.getUserPassword());
         HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
 
         ResponseEntity<Result<Diagram>> response = restTemplate.exchange(

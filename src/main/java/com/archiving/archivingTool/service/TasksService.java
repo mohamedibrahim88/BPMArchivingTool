@@ -13,14 +13,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TasksService {
     @Autowired
-  private ProcessTasks processTasks;
+    private ProcessTasks processTasks;
 
- public List<Step> getProcessTasks(ExposedItemsDetails exposedItemsDetails)
- {
-    return processTasks.getProcessTasks(exposedItemsDetails);
- }
-//    public Optional<LswProcess> getCoachView (String processID, String versionID){
-//     return processTasks.getCoachView(processID,versionID);
-//    }
+     public List<Step> getProcessTasks(ExposedItemsDetails exposedItemsDetails)
+     {
+        return processTasks.getProcessTasks(exposedItemsDetails);
+     }
+
+     public List<Step> getProcessDiagramTasks(String processAppID, String snapshotID){
+         return processTasks.getProcessDiagramTasks(processAppID,snapshotID);
+     }
+
+    //    public Optional<LswProcess> getCoachView (String processID, String versionID){
+    //     return processTasks.getCoachView(processID,versionID);
+    //    }
 
 }

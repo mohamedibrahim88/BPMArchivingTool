@@ -284,7 +284,7 @@ public class BPMInstances {
 
         System.out.println("DTO: " + instances);
 
-        SnapshotsEntity snapshotsEntity = snapshotsRepository.findBySnapshotID(instances.get(1).getSnapshotID());
+        SnapshotsEntity snapshotsEntity = snapshotsRepository.findBySnapshotID(instances.getFirst().getSnapshotID()).getFirst();
         List<InstancesEntity> instance = InstancesMapper.INSTANCE.fromInstancesToEntity(instances);
         for (InstancesEntity item : instance){
             item.setSnapshotI(snapshotsEntity);

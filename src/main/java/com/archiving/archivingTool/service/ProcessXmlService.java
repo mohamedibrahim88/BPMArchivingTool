@@ -1,13 +1,21 @@
 package com.archiving.archivingTool.service;
 
+import com.archiving.archivingTool.client.ConfigurationWizard;
+import com.archiving.archivingTool.client.ProcessTasks;
 import com.archiving.archivingTool.dto.bpm.CoachDefinitionNodeDTO;
+import com.archiving.archivingTool.entity.archiving.InstancesEntity;
 import com.archiving.archivingTool.entity.bpm.BpmCoachView;
 import com.archiving.archivingTool.entity.bpm.LswProcess;
+import com.archiving.archivingTool.model.Step;
+import com.archiving.archivingTool.repository.archiving.InstancesRepository;
 import com.archiving.archivingTool.repository.bpm.BpmCoachViewRepository;
 import com.archiving.archivingTool.repository.bpm.LswProcessRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -26,16 +34,26 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
 
 @Service
-@RequiredArgsConstructor
 public class ProcessXmlService {
+    private final InstancesRepository instancesRepository;
     @Autowired
     private final LswProcessRepository processRepository;
+
 
     @Autowired
     private final BpmCoachViewRepository coachViewRepo;
 
+    public ProcessXmlService(InstancesRepository instancesRepository, LswProcessRepository processRepository, BpmCoachViewRepository coachViewRepo) {
+        this.instancesRepository = instancesRepository;
+        this.processRepository = processRepository;
+        this.coachViewRepo = coachViewRepo;
+    }
+
+    @Autowired
+    private ProcessTasks processTasks;
 //    public List<CoachDefinitionNodeDTO> parseCoachDefinitions(String id, String versionId) throws Exception {
 //        // Fetching process data based on id and versionId
 //        Optional<LswProcess> optional = processRepository.getCoachViewIDs(id, versionId);
@@ -356,8 +374,12 @@ public class ProcessXmlService {
 
     ///////V3
 
-    public List<CoachDefinitionNodeDTO> getLayoutTree(String taskId, String versionId) throws Exception {
-        Optional<LswProcess> optional = processRepository.getCoachViewIDs(taskId, versionId);
+    @Transactional("archivingTransactionManager")
+    public List<CoachDefinitionNodeDTO> getLayoutTree(String processAppID, String snapshotID, String instanceID) throws Exception {
+        Step taskDiagram = processTasks.getProcessDiagramTasks(processAppID,snapshotID).getFirst();
+        String taskID = taskDiagram.getExternalID();
+        taskID = taskID.split("\\.")[1];
+        Optional<LswProcess> optional = processRepository.getCoachViewIDs(taskID);
 
         if (optional.isEmpty()) {
             throw new RuntimeException("Process not found");
@@ -382,8 +404,40 @@ public class ProcessXmlService {
             }
         }
 
+//        InstancesEntity instancesEntity = instancesRepository.getByPiid(instanceID);
+//        System.out.println("instance : " + instancesEntity);
+//        System.out.println(instancesEntity.getJsonObject());
+//        ObjectMapper mapper = new ObjectMapper();
+//        JsonNode root = mapper.readTree(instancesEntity.getJsonObject());
+//        System.out.println("Root : " + root);
+//        result = getBinding(result, root);
+
         return result;
     }
+
+
+//    private List<CoachDefinitionNodeDTO> getBinding(List<CoachDefinitionNodeDTO> coachDefinitionNodeDTOList, JsonNode root){
+//        List<CoachDefinitionNodeDTO> result = coachDefinitionNodeDTOList;
+//        for (CoachDefinitionNodeDTO coachDefinitionNodeDTO : coachDefinitionNodeDTOList){
+//            System.out.println("searching : " + coachDefinitionNodeDTO.getLabel());
+//            JsonNode value = root.get("App").get(coachDefinitionNodeDTO.getLabel().toLowerCase());
+//            System.out.println("json : " + value);
+//            if(value == null){
+//                if (!coachDefinitionNodeDTO.getChildren().isEmpty()){
+//                    System.out.println("recursion : " + coachDefinitionNodeDTO.getChildren());
+//                    getBinding(coachDefinitionNodeDTO.getChildren(), root);
+//                }else {
+//                    result.add(coachDefinitionNodeDTO);
+//                    return result;
+//                }
+//            }else {
+//                System.out.println("Found Label : " + value.asText());
+//                coachDefinitionNodeDTO.setBinding(value.asText());
+//            }
+//            result.add(coachDefinitionNodeDTO);
+//        }
+//        return result;
+//    }
 
     private String safeEvaluate(XPath xpath, String expression, Node contextNode) {
         try {

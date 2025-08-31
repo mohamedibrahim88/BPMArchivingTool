@@ -10,6 +10,6 @@ import java.util.Optional;
 
 public interface LswProcessRepository extends JpaRepository<LswProcess, String> {
 
-    @Query(value = "SELECT * FROM LSW_PROCESS WHERE PROCESS_ID = :taskID AND VERSION_ID = :versionId", nativeQuery = true)
-    Optional<LswProcess> getCoachViewIDs(@Param("taskID") String taskID, @Param("versionId") String versionId);
+    @Query(value = "SELECT * FROM LSW_PROCESS WHERE PROCESS_ID = :taskID ORDER BY LAST_MODIFIED DESC FETCH FIRST 1 ROWS ONLY", nativeQuery = true)
+    Optional<LswProcess> getCoachViewIDs(@Param("taskID") String taskID);
 }

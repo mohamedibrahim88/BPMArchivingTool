@@ -43,7 +43,6 @@ public class ConfigurationWizard {
     @Value("${bpm.password}")
     private String password;
 
-
     public ConfigurationWizard(ProcessAppRepository processAppRepository, SnapshotsRepository snapshotsRepository, ServerTypesRepository serverTypesRepository, ServerConfigRepository serverConfigRepository, ProcessAppGroupsRepository processAppGroupsRepository) {
         this.processAppRepository = processAppRepository;
         this.snapshotsRepository= snapshotsRepository;
@@ -194,13 +193,13 @@ public class ConfigurationWizard {
 
     public ExposedProcesses getExposedProcesses(String processAppID) {
 
-        String bpmApiUrl = bpmServerUrl + "/rest/bpm/wle/v1/exposed/process";
+        String bpmApiUrl = getStringConnection("01_BAW") + "/rest/bpm/wle/v1/exposed/process";
         Result<ExposedProcesses> result= new Result<>();
         ExposedProcesses exposedProcesses = new ExposedProcesses();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        // Set authentication if needed (Basic Auth example)
-        headers.setBasicAuth("wasadmin", "wasadminP@ssw0rd");
+        ArchivingServersEntity creditials = getCredintials("01_BAW");
+        headers.setBasicAuth(creditials.getUserName(), creditials.getUserPassword());
         HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
         ResponseEntity<Result<ExposedProcesses>> response = restTemplate.exchange(
                 bpmApiUrl,

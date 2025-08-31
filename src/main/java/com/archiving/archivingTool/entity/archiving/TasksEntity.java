@@ -1,5 +1,6 @@
 package com.archiving.archivingTool.entity.archiving;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -8,7 +9,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = "snapshots")
 @Entity
 @EnableAutoConfiguration
 @Table(name="Tasks")
@@ -31,5 +32,6 @@ public class TasksEntity {
 
     @ManyToOne
     @JoinColumn(name = "snapshot_id")
+    @JsonBackReference
     private SnapshotsEntity snapshots;
 }

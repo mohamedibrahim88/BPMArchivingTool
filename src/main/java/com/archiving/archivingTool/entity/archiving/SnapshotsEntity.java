@@ -1,5 +1,6 @@
 package com.archiving.archivingTool.entity.archiving;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -10,7 +11,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = "tasks")
 @Entity
 @EnableAutoConfiguration
 @Table(name="Snapshots")
@@ -36,7 +37,8 @@ public class SnapshotsEntity {
     private ProcessAppsEntity processApps;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "snapshots")
-   private List<TasksEntity> tasks;
+    @JsonManagedReference
+    private List<TasksEntity> tasks;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "snapshotI")
     private List<InstancesEntity>instances;

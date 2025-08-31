@@ -21,6 +21,12 @@ public class TasksController {
       return tasksService.getProcessTasks(exposedItemsDetails);
     }
 
+    @GetMapping("/diagram")
+    public List<Step> getProcessDiagramTasks(@RequestParam String processAppID, @RequestParam String snapshotID)
+    {
+        return tasksService.getProcessDiagramTasks(processAppID,snapshotID);
+    }
+
 //    @GetMapping("/view")
 //    public Optional<LswProcess> getCoachView(@RequestParam String processID, @RequestParam String versionID)
 //    {

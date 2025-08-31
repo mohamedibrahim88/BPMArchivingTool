@@ -20,9 +20,9 @@ public class ProcessXmlController {
     }
 
     @GetMapping("/xml")
-    public ResponseEntity<List<CoachDefinitionNodeDTO>> getCoachDefinitions(@RequestParam String id, @RequestParam String versionId) {
+    public ResponseEntity<List<CoachDefinitionNodeDTO>> getCoachDefinitions(@RequestParam String processAppID, @RequestParam String snapshotID, @RequestParam String instanceID) {
         try {
-            List<CoachDefinitionNodeDTO> result = xmlService.getLayoutTree(id, versionId);
+            List<CoachDefinitionNodeDTO> result = xmlService.getLayoutTree(processAppID,snapshotID,instanceID);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             System.out.println(e.getMessage());
